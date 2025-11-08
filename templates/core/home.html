@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Bem-vindo - Conecta Pilar{% endblock %}
+
+{% block content %}
+<div class="text-center p-5 mb-4 bg-light rounded-3">
+    <h1 class="display-4">Bem-vindo ao Conecta Pilar!</h1>
+    <p class="lead">Seu login foi bem-sucedido.</p>
+    <p>Estamos redirecionando você para sua página...</p>
+    <hr class="my-4">
+    
+    <p>Se nada acontecer, clique no link apropriado:</p>
+    
+    {% if user.profile.role == 'aluno' %}
+        <a href="{% url 'aluno' %}" class="btn btn-primary btn-lg">Ir para a Área do Aluno</a>
+    {% elif user.profile.role == 'professor' %}
+        <a href="{% url 'professor' %}" class="btn btn-primary btn-lg">Ir para a Área do Professor</a>
+    {% elif user.profile.role == 'admin' %}
+        <a href="/admin/" class="btn btn-primary btn-lg">Ir para o Painel Admin</a>
+    {% endif %}
+</div>
+
+{% if user.profile.role %}
+    <meta http-equiv="refresh" content="2;url={% if user.profile.role == 'aluno' %}{% url 'aluno' %}{% elif user.profile.role == 'professor' %}{% url 'professor' %}{% else %}/admin/{% endif %}">
+{% endif %}
+
+{% endblock %}

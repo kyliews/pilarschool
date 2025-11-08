@@ -1,0 +1,183 @@
+/* static/css/style.css */
+
+/* --- Fonte (Já configurada) --- */
+@font-face {
+    font-family: 'Gacor Regular';
+    src: url('../fonts/Gacor Personal Use Only.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* --- Paleta de Cores --- */
+:root {
+    --cor-primaria: #0086FF;
+    --cor-secundaria: #FFFF55;
+    --cor-terciaria: #00FFB6;
+    --cor-texto: #111111; /* Preto/Cinza bem escuro */
+    --cor-texto-leve: #444;   /* Cinza mais escuro para parágrafos */
+    --fundo-pagina: #f0f2f5; 
+    --fundo-card: #ffffff;
+    --fundo-navbar: #ffffff;
+    --borda-suave: #e9ecef;
+}
+
+/* --- Estilos Globais --- */
+body, .btn {
+    font-family: 'Gacor Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background-color: var(--fundo-pagina) !important; 
+}
+
+/* Títulos da página (ex: "Área do Aluno") */
+.page-title {
+    text-align: center;
+    font-weight: normal; /* MUDANÇA: 'normal' é mais legível que '700' para esta fonte */
+    color: var(--cor-texto);
+    margin-bottom: 2rem;
+}
+
+/* --- Navbar (Barra Superior) --- */
+.navbar {
+    background-color: var(--fundo-navbar) !important;
+    border-bottom: 1px solid var(--borda-suave);
+}
+.navbar-brand img {
+    width: 30px; 
+}
+
+/* --- Estilo dos Botões --- */
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 700; /* Peso 700 (bold) fica bom em botões */
+}
+
+.btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #ffffff !important; 
+}
+.btn-primary:hover {
+    background-color: #0070d1; 
+    border-color: #0070d1;
+    color: #ffffff !important; 
+}
+
+.btn-success {
+    background-color: var(--cor-terciaria);
+    border-color: var(--cor-terciaria);
+    color: #111;
+}
+.btn-success:hover {
+    background-color: #00e0a0;
+    border-color: #00e0a0;
+    color: #111;
+}
+
+/* --- Grid de Cursos (Layout de Cards) --- */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.course-card {
+    background-color: var(--fundo-card);
+    border-radius: 16px;
+    border: 1px solid var(--borda-suave);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+.course-card:hover {
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+/* MUDANÇA: Título do card agora é preto (cor-texto) */
+.course-card h4 {
+    color: var(--cor-texto); /* Era var(--cor-primaria) */
+    font-weight: normal; /* Mais legível */
+}
+/* MUDANÇA: Texto do professor agora é mais escuro */
+.course-card p {
+    color: var(--cor-texto-leve); /* Era #555 */
+    font-size: 0.9rem;
+}
+
+/* --- Estilo do Modal (Pop-up) --- */
+.modal-content {
+    border-radius: 16px !important;
+    border: none;
+}
+.modal-header {
+    border-bottom: 1px solid var(--borda-suave);
+}
+.modal-footer {
+    border-top: 1px solid var(--borda-suave);
+}
+.modal-info-bar {
+    background-color: var(--fundo-pagina);
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.modal-info-bar span {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.modal-section {
+    margin-top: 1.5rem;
+}
+.material-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+.material-item {
+    background-color: var(--fundo-pagina);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* --- Estilo do Card de Login --- */
+.login-card {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 2rem;
+    background-color: var(--fundo-card);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: none;
+    border-radius: 16px;
+}
+.login-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.login-header img {
+    width: 100px;
+    margin-bottom: 1rem;
+}
+
+/* --- Abas (Tabs) --- */
+.nav-tabs {
+    border-bottom: 1px solid var(--borda-suave);
+}
+/* MUDANÇA: Cor da aba inativa está mais escura */
+.nav-tabs .nav-link {
+    font-weight: 700;
+    color: #555; /* Era #888 */
+}
+.nav-tabs .nav-link.active {
+    color: var(--cor-primaria);
+    border-color: var(--borda-suave) var(--borda-suave) var(--fundo-card) !important;
+}

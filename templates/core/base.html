@@ -1,0 +1,81 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Conecta Pilar{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                Conecta Pilar
+            </a>
+            
+            <!-- Links da Navbar (como nos mockups) -->
+            <ul class="navbar-nav me-auto">
+                {% if user.is_authenticated and user.profile.role == 'aluno' %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'aluno' %}">Meus Cursos</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated and user.profile.role == 'professor' %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'professor' %}">Meus Cursos</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Agendamentos</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">
+                            Olá, {{ user.get_full_name|default:user.username }}! 
+                            ({% if user.is_superuser %}Superuser{% else %}{{ user.profile.get_role_display }}{% endif %})
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-danger" href="{% url 'logout' %}">Sair (Logout)</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="{% url 'login' %}">Entrar</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mt-4 mb-5">
+        
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- 
+      A MUDANÇA IMPORTANTE ESTÁ AQUI:
+      Adicionando o JavaScript do Bootstrap. 
+      Isto é OBRIGATÓRIO para os Modais (pop-ups) funcionarem.
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
