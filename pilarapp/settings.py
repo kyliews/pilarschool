@@ -1,39 +1,38 @@
-# pilarapp/settings.py
-# esta é a versão "limpa" para desenvolvimento local
-
 from pathlib import Path
 import os
 
-# build paths inside the project like this: base_dir / 'subdir'.
-base_dir = Path(__file__).resolve().parent.parent
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# quick-start development settings - unsuitable for production
-# see https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# security warning: keep the secret key used in production secret!
-secret_key = 'django-insecure-fallback-key-para-local' 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-fallback-key-para-local' 
 
-# security warning: don't run with debug turned on in production!
-debug = true
+# SECURITY WARNING: don't run with debug turned on in production!
+# CORRIGIDO: 'True' com 'T' maiúsculo para funcionar localmente
+DEBUG = True
 
-allowed_hosts = []
+# Para DEBUG = True, podemos deixar ALLOWED_HOSTS vazio
+ALLOWED_HOSTS = []
 
 
-# application definition
+# Application definition
 
-installed_apps = [
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # nosso app
+    # Nosso app
     'core',
 ]
 
-middleware = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -43,14 +42,14 @@ middleware = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-root_urlconf = 'pilarapp.urls'
+ROOT_URLCONF = 'pilarapp.urls'
 
-templates = [
+TEMPLATES = [
     {
-        'backend': 'django.template.backends.django.DjangoTemplates',
-        'dirs': [base_dir / 'templates'], # já está correto
-        'app_dirs': true,
-        'options': {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'], # já está correto
+        'APP_DIRS': True, # CORRIGIDO: 'True' com 'T' maiúsculo
+        'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -61,64 +60,64 @@ templates = [
     },
 ]
 
-wsgi_application = 'pilarapp.wsgi.application'
+WSGI_APPLICATION = 'pilarapp.wsgi.application'
 
 
-# database (voltamos ao sqlite3 simples)
+# Database (voltamos ao sqlite3 simples)
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-databases = {
+DATABASES = {
     'default': {
-        'engine': 'django.db.backends.sqlite3',
-        'name': base_dir / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
 
-# password validation
+# Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-auth_password_validators = [
-    {'name': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'name': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'name': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'name': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
-# internationalization
+# Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-language_code = 'pt-br'
-time_zone = 'america/recife'
-use_i1n = true
-use_tz = true
+LANGUAGE_CODE = 'pt-br'
+TIME_ZONE = 'America/Recife'
+USE_I18N = True # CORRIGIDO: 'True' com 'T' maiúsculo
+USE_TZ = True # CORRIGIDO: 'True' com 'T' maiúsculo
 
 
-# static files (css, javascript, images)
+# Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-static_url = 'static/'
+STATIC_URL = 'static/'
 
-# pasta onde o django procura seus arquivos estáticos (correto)
-staticfiles_dirs = [
-    os.path.join(base_dir, 'static'),
+# Pasta onde o Django procura seus arquivos estáticos (correto)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
 ]
 
-# (removemos static_root e whitenoise)
+# (Removemos STATIC_ROOT e Whitenoise, que eram para o Vercel)
 
 
-# default primary key field type
+# Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-default_auto_field = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# rotas de login/logout (correto)
-login_url = '/login/'
-login_redirect_url = '/'
-logout_redirect_url = '/'
+# Rotas de login/logout (correto)
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
-# configuracao de definicao de senha (correto)
-email_backend = 'django.core.mail.backends.console.EmailBackend'
-email_host = 'localhost'
-email_port = 1025
+# Configuracao de definicao de senha (correto)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
