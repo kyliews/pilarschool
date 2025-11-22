@@ -12,6 +12,7 @@ django
 sqlite3 (banco de dados padrão)
 html5
 css3
+pillow para imagem do perfil
 bootstrap 5 (para o layout e componentes como modais e abas)
 javascript (nativo do bootstrap, para interatividade)
 ````
@@ -58,9 +59,8 @@ ativar (mac/linux)
 ###### source .venv/bin/activate
 
 3. instale as dependências:
-(neste projeto, é apenas o django)
 
-###### pip install django
+######  pip install -r requirements.txt
 
 4.  crie o banco de dados (migrações) este comando cria o arquivo db.sqlite3 e todas as tabelas (auth, core, etc.).
 
