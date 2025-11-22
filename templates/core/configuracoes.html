@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Configurações - Conecta Pilar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="page-title text-center mb-5">Configurações da Conta</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            
+            <div class="card border-0 shadow p-4 mb-4">
+                <h4 class="mb-4 text-brand"><i class="ri-equalizer-line"></i> Preferências & Privacidade</h4>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 border-bottom border-secondary">
+                        <div>
+                            <label class="fw-bold text-white mb-0" for="{{ form.receber_notificacoes.id_for_label }}">Notificações por E-mail</label>
+                            <small class="d-block text-muted">Receba avisos sobre novas aulas e materiais.</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            {{ form.receber_notificacoes }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 border-bottom border-secondary">
+                        <div>
+                            <label class="fw-bold text-white mb-0" for="{{ form.perfil_publico.id_for_label }}">Perfil Público</label>
+                            <small class="d-block text-muted">Permitir que outros alunos vejam seu perfil.</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            {{ form.perfil_publico }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-2">
+                        <div>
+                            <label class="fw-bold text-white mb-0" for="{{ form.modo_alto_contraste.id_for_label }}">Alto Contraste</label>
+                            <small class="d-block text-muted">Aumenta a legibilidade dos textos.</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            {{ form.modo_alto_contraste }}
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-primary fw-bold">Salvar Preferências</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card border-0 shadow p-4 mb-4">
+                <h4 class="mb-4 text-info"><i class="ri-shield-key-line"></i> Segurança</h4>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white mb-1">Alterar Senha</h6>
+                        <small class="text-muted">Recomendamos trocar sua senha a cada 3 meses.</small>
+                    </div>
+                    <a href="{% url 'password_reset' %}" class="btn btn-outline-primary">Mudar Senha</a>
+                </div>
+            </div>
+
+            <div class="card border border-danger p-4 mb-5" style="background: rgba(220, 53, 69, 0.1) !important;">
+                <h4 class="mb-4 text-danger"><i class="ri-alert-line"></i> Zona de Perigo</h4>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-danger mb-1 fw-bold">Excluir Conta</h6>
+                        <small class="text-white">Esta ação é irreversível. Todos os seus dados serão apagados.</small>
+                    </div>
+                    <button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        Excluir Minha Conta
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-danger fw-bold">Tem certeza absoluta?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-white">Você está prestes a excluir a conta de <strong>{{ user.username }}</strong>.</p>
+                <p class="text-white">Isso apagará seu histórico de cursos, certificados e perfil. <br>Essa ação <strong>não pode ser desfeita</strong>.</p>
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                
+                <form action="{% url 'deletar_conta' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger fw-bold">Sim, Excluir Conta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

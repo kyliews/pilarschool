@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado Conecta Pilar</title>
+    <style>
+        /* O BLOCO @font-face FOI REMOVIDO PARA EVITAR O TTFERROR */
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+            background-color: #1e293b;
+        }
+
+        body {
+            /* MANTEMOS O FALLBACK CASO A FONTE GACOR FALHE, MAS O NOME 'Gacor' JÁ ESTÁ REGISTRADO */
+            font-family: 'Helvetica', sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            background-color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Borda Neon Externa */
+        .borda-interna {
+            border: 2px solid #00FFB6; 
+            height: 95%; 
+            margin: 20px;
+            position: relative;
+            background: radial-gradient(circle, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+            border-radius: 20px;
+        }
+
+        /* Elementos Decorativos (Cantos) */
+        .canto {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 4px solid #00FFB6;
+        }
+        .top-left { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .top-right { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        /* Conteúdo */
+        .conteudo {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+        }
+
+        .logo {
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #00FFB6;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        /* Título Principal (Onde a fonte Gacor será usada) */
+        h1 {
+            font-family: 'Gacor', sans-serif; 
+            font-size: 65px;
+            font-weight: normal;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .subtitulo {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            margin-top: 10px;
+            margin-bottom: 50px;
+        }
+
+        .nome-aluno {
+            font-size: 44px;
+            font-weight: bold;
+            color: #00FFB6;
+            border-bottom: 2px solid #ffffff;
+            display: block;
+            padding-bottom: 10px;
+            margin: 15px auto;
+            width: fit-content;
+        }
+
+        .texto-corpo {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            margin-bottom: 50px;
+            text-align: center;
+            width: 80%;
+            margin: 40px auto;
+        }
+
+        .destaque-curso {
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 22px;
+            display: block;
+            margin: 5px 0;
+        }
+
+        /* Rodapé e Assinaturas */
+        .rodape-container {
+            width: 100%;
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            text-align: center;
+        }
+
+        .assinatura-bloco {
+            width: 40%;
+            display: inline-block;
+            padding: 0 10px;
+            text-align: center;
+            vertical-align: top;
+            margin: 0 5%;
+        }
+
+        .linha-assinatura {
+            border-top: 1px solid #94a3b8;
+            width: 200px;
+            margin: 0 auto 5px auto;
+        }
+
+        .cargo {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .data-conclusao {
+            font-size: 14px;
+            color: #00FFB6;
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="area-principal">
+        <div class="header-logo">CONECTA PILAR</div>
+        
+        <h1>Certificado</h1>
+        <div class="subtitulo">de Conclusão de Curso</div>
+
+        <div class="texto-corpo">
+            Certificamos para os devidos fins que
+            <br>
+            <span class="nome-aluno">{{ aluno }}</span>
+            <br>
+            concluiu com êxito o curso profissionalizante de
+            <span class="destaque-curso">{{ curso }}</span>
+            com carga horária total de <strong>{{ carga_horaria }} horas</strong>.
+        </div>
+
+        <div class="rodape-container">
+            <table>
+                <tr>
+                    <td>
+                        <div class="linha-assinatura"></div>
+                        <strong>{{ professor }}</strong><br>
+                        <span class="cargo">Professor(a) Responsável</span>
+                    </td>
+                    <td>
+                        <div class="linha-assinatura"></div>
+                        <strong>Diretoria Conecta Pilar</strong><br>
+                        <span class="cargo">Coordenação Pedagógica</span>
+                    </td>
+                </tr>
+            </table>
+
+            <span class="data-conclusao">
+                Recife, {{ data_conclusao|date:"d \d\e F \d\e Y" }}
+            </span>
+        </div>
+    </div>
+</body>
+</html>

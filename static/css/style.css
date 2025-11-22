@@ -1,183 +1,502 @@
-/* static/css/style.css */
-
-/* --- Fonte (Já configurada) --- */
-@font-face {
-    font-family: 'Gacor Regular';
-    src: url('../fonts/Gacor Personal Use Only.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* --- Paleta de Cores --- */
 :root {
-    --cor-primaria: #0086FF;
-    --cor-secundaria: #FFFF55;
-    --cor-terciaria: #00FFB6;
-    --cor-texto: #111111; /* Preto/Cinza bem escuro */
-    --cor-texto-leve: #444;   /* Cinza mais escuro para parágrafos */
-    --fundo-pagina: #f0f2f5; 
-    --fundo-card: #ffffff;
-    --fundo-navbar: #ffffff;
-    --borda-suave: #e9ecef;
+    --gradient-brand: linear-gradient(90deg, #00FFB6 0%, #0086FF 100%);
+    --color-green: #00FFB6;
+    --color-blue: #0086FF;
+    --glass-bg: rgba(15, 23, 42, 0.6);
+    --glass-card: rgba(30, 41, 59, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-white: #FFFFFF;
 }
 
-/* --- Estilos Globais --- */
-body, .btn {
-    font-family: 'Gacor Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+* {
+    color: var(--text-white);
 }
 
 body {
-    background-color: var(--fundo-pagina) !important; 
+    font-family: 'Montserrat', sans-serif;
+    background-color: #000;
+    background-image: 
+        linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.9) 100%),
+        linear-gradient(90deg, rgba(0, 255, 182, 0.2) 0%, rgba(0, 134, 255, 0.2) 100%),
+        url('../images/fundo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding-top: 80px;
+    min-height: 100vh;
 }
 
-/* Títulos da página (ex: "Área do Aluno") */
-.page-title {
-    text-align: center;
-    font-weight: normal; /* MUDANÇA: 'normal' é mais legível que '700' para esta fonte */
-    color: var(--cor-texto);
-    margin-bottom: 2rem;
+/* Textos Brancos */
+h1, h2, h3, h4, h5, h6, p, span, div, label, small, .form-text, 
+.text-muted, .lead, .alert, .nav-link, .dropdown-item, .modal-title, 
+.modal-body, .course-card p, .course-card small, .material-item {
+    color: var(--text-white) !important;
 }
 
-/* --- Navbar (Barra Superior) --- */
+.text-brand {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Vidro Geral (Cards, Modais, Abas) */
+.bg-white, .bg-light, .p-4, .card, .login-card, .modal-content, .rounded-bottom {
+    background-color: var(--glass-card) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    color: white !important;
+}
+
+/* Correção de Bordas das Abas */
+.border-top-0 {
+    border-top: none !important;
+    border-top-left-radius: 0 !important; /* Zera a curva superior */
+    border-top-right-radius: 0 !important; /* Zera a curva superior */
+    border-radius: 0 0 15px 15px; /* Curva apenas embaixo */
+}
+
+/* Navbar */
 .navbar {
-    background-color: var(--fundo-navbar) !important;
-    border-bottom: 1px solid var(--borda-suave);
-}
-.navbar-brand img {
-    width: 30px; 
-}
-
-/* --- Estilo dos Botões --- */
-.btn {
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    font-weight: 700; /* Peso 700 (bold) fica bom em botões */
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    border-radius: 0 !important;
 }
 
+.navbar-brand {
+    color: var(--color-green) !important;
+    font-weight: 800;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-weight: 600;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: white !important;
+}
+
+/* Inputs e Formulários */
+.form-control, .form-select, input[type="text"], input[type="password"], input[type="email"] {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    border-radius: 10px;
+    padding: 10px;
+    opacity: 1 !important;
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    opacity: 1;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-color: var(--color-green) !important;
+    box-shadow: 0 0 0 3px rgba(0, 255, 182, 0.2);
+}
+
+input:disabled, input[readonly], .form-control:disabled, .form-control[readonly] {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    opacity: 1 !important;
+    border-color: transparent !important;
+    cursor: not-allowed;
+}
+
+.form-label {
+    color: white !important;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Switches */
+.form-check-input {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    width: 3em !important;
+    height: 1.5em !important;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--color-green);
+    border-color: var(--color-green);
+    box-shadow: 0 0 10px rgba(0, 255, 182, 0.5);
+}
+
+/* Select Options (Preto) */
+select option {
+    background-color: #0f172a;
+    color: white;
+}
+
+/* Autofill Chrome */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.6) inset !important;
+    -webkit-text-fill-color: white !important;
+}
+
+/* Date Picker Dark */
+input[type="date"] {
+    color-scheme: dark;
+    position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+    color: white;
+}
+
+/* Botões */
 .btn-primary {
-    background-color: var(--cor-primaria);
-    border-color: var(--cor-primaria);
-    color: #ffffff !important; 
+    background: var(--gradient-brand);
+    border: none;
+    border-radius: 30px;
+    color: #000 !important;
+    font-weight: 800;
+    padding: 12px 30px;
 }
+
 .btn-primary:hover {
-    background-color: #0070d1; 
-    border-color: #0070d1;
-    color: #ffffff !important; 
+    box-shadow: 0 0 20px rgba(0, 255, 182, 0.5);
+    transform: translateY(-2px);
 }
 
 .btn-success {
-    background-color: var(--cor-terciaria);
-    border-color: var(--cor-terciaria);
-    color: #111;
-}
-.btn-success:hover {
-    background-color: #00e0a0;
-    border-color: #00e0a0;
-    color: #111;
-}
-
-/* --- Grid de Cursos (Layout de Cards) --- */
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.course-card {
-    background-color: var(--fundo-card);
-    border-radius: 16px;
-    border: 1px solid var(--borda-suave);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding: 1.5rem;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-}
-.course-card:hover {
-    cursor: pointer;
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-}
-
-/* MUDANÇA: Título do card agora é preto (cor-texto) */
-.course-card h4 {
-    color: var(--cor-texto); /* Era var(--cor-primaria) */
-    font-weight: normal; /* Mais legível */
-}
-/* MUDANÇA: Texto do professor agora é mais escuro */
-.course-card p {
-    color: var(--cor-texto-leve); /* Era #555 */
-    font-size: 0.9rem;
-}
-
-/* --- Estilo do Modal (Pop-up) --- */
-.modal-content {
-    border-radius: 16px !important;
+    background: #10b981 !important;
     border: none;
-}
-.modal-header {
-    border-bottom: 1px solid var(--borda-suave);
-}
-.modal-footer {
-    border-top: 1px solid var(--borda-suave);
-}
-.modal-info-bar {
-    background-color: var(--fundo-pagina);
-    padding: 1rem;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-.modal-info-bar span {
-    font-size: 0.9rem;
+    color: white !important;
     font-weight: 700;
-}
-.modal-section {
-    margin-top: 1.5rem;
-}
-.material-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-}
-.material-item {
-    background-color: var(--fundo-pagina);
-    border-radius: 8px;
-    padding: 1.5rem;
-    text-align: center;
-    font-weight: 700;
-    font-size: 0.9rem;
 }
 
-/* --- Estilo do Card de Login --- */
+/* Login */
 .login-card {
     max-width: 450px;
-    margin: 50px auto;
-    padding: 2rem;
-    background-color: var(--fundo-card);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    border: none;
-    border-radius: 16px;
-}
-.login-header {
+    margin: 2rem auto;
+    padding: 2.5rem;
     text-align: center;
-    margin-bottom: 1.5rem;
 }
+
 .login-header img {
-    width: 100px;
+    height: 60px;
+    width: auto;
     margin-bottom: 1rem;
 }
 
-/* --- Abas (Tabs) --- */
-.nav-tabs {
-    border-bottom: 1px solid var(--borda-suave);
+/* Grid de Cursos */
+.course-grid {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
 }
-/* MUDANÇA: Cor da aba inativa está mais escura */
-.nav-tabs .nav-link {
+
+.course-card {
+    flex: 0 1 350px;
+    max-width: 400px;
+    margin: 0;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-green) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.course-card h4 {
+    color: var(--color-green) !important;
     font-weight: 700;
-    color: #555; /* Era #888 */
+    margin-bottom: 1rem;
 }
+
+.course-card p {
+    margin-bottom: 0.5rem;
+}
+
+.course-card small {
+    opacity: 0.8;
+}
+
+.course-card .btn {
+    width: 100%;
+    margin-top: auto;
+}
+
+.course-card hr {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    margin: 1rem 0;
+    width: 100%;
+}
+
+/* Abas */
+.nav-tabs {
+    border-bottom: 1px solid var(--glass-border);
+    justify-content: center !important;
+    margin-bottom: 0 !important;
+    gap: 20px;
+    width: 100%;
+}
+
+.nav-tabs .nav-link {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    margin-bottom: -1px;
+}
+
 .nav-tabs .nav-link.active {
-    color: var(--cor-primaria);
-    border-color: var(--borda-suave) var(--borda-suave) var(--fundo-card) !important;
+    background: transparent !important;
+    color: var(--color-green) !important;
+    border-bottom: 3px solid var(--color-green);
+}
+
+.tab-content > .tab-pane > .p-4 {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-top: none !important;
+    margin-top: 0 !important;
+}
+
+/* Alertas */
+.alert {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.alert-info { border-left: 4px solid var(--color-blue); }
+.alert-warning { border-left: 4px solid #FFC107; }
+.alert-secondary { border-left: 4px solid #6c757d; }
+.alert-danger { border-left: 4px solid #ef4444; }
+
+.alert .btn-close {
+    filter: invert(1);
+}
+
+/* Modais */
+.modal-dialog {
+    max-width: 95% !important;
+    margin: 2rem auto;
+}
+
+@media (min-width: 992px) {
+    .modal-dialog {
+        max-width: 1100px !important; 
+    }
+}
+
+.modal-content {
+    background: #1e293b !important;
+    border: 1px solid var(--glass-border) !important;
+    color: white !important;
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--glass-border);
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+.modal-info-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.modal-info-bar span {
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.modal-section {
+    margin-bottom: 2rem;
+}
+
+.modal-section h5 {
+    color: var(--color-green) !important;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Grid de Materiais (Modais) */
+.material-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem;
+}
+
+.material-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: block;
+    color: white !important; /* Força texto branco */
+}
+
+.material-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 16px;
+    padding: 10px;
+    margin-top: 15px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.dropdown-item {
+    color: #FFFFFF !important;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--color-green) !important;
+}
+
+.dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: transparent !important;
+}
+
+.dropdown-item.text-danger {
+    background-color: rgba(220, 38, 38, 0.8) !important;
+    color: white !important;
+    justify-content: center;
+    display: flex;
+    margin-top: 5px;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #DC2626 !important;
+}
+
+/* Botão Acessibilidade */
+.accessibility-fab {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 9999;
+}
+
+.accessibility-fab button#toggleAccess {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+.access-menu {
+    display: none;
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 16px;
+    width: 180px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.access-menu.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Alto Contraste */
+body.high-contrast {
+    filter: contrast(120%) brightness(110%) saturate(120%);
+    background-color: #000 !important;
+}
+
+body.high-contrast * {
+    text-shadow: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+body.high-contrast .card, 
+body.high-contrast .btn, 
+body.high-contrast input {
+    border: 2px solid #fff !important;
+}
+
+/* Utilitários */
+.text-center, .page-title {
+    text-align: center !important;
+    display: block;
+    width: 100%;
+}
+
+.page-title {
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.lead {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+a {
+    text-decoration: none;
 }

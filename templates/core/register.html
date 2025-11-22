@@ -1,96 +1,82 @@
 {% extends 'core/base.html' %}
 {% load static %} 
 
-{% block title %}Cadastro - Conecta Pilar{% endblock %}
+{% block title %}Criar Conta - Conecta Pilar{% endblock %}
 
 {% block content %}
-<div class="login-card"> 
-    <div class="login-header"> 
-        <!-- LOGO ATUALIZADO PARA USAR O ARQUIVO LOCAL -->
-        <img src="{% static 'images/logo.png' %}" alt="Logo">
-        <h2 class="mt-3">Crie sua Conta</h2>
-    </div>
-
-    <form method="POST">
-        {% csrf_token %} 
-        
-        {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
+<div class="row justify-content-center align-items-center mb-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="login-card">
+            <div class="login-header text-center">
+                <img src="{% static 'images/logo.png' %}" alt="Logo">
+                <h2 class="mt-2">Crie sua Conta</h2>
             </div>
-        {% endif %}
 
-        <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}" class="form-label">Nome de Utilizador</label>
-            {{ form.username }}
-            {% if form.username.help_text %}
-              <small class="form-text text-muted">{{ form.username.help_text|safe }}</small>
-            {% endif %}
-            {% for error in form.username.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="mb-3">
-            <label for="{{ form.first_name.id_for_label }}" class="form-label">Nome</label>
-            {{ form.first_name }}
-            {% for error in form.first_name.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <form method="POST">
+                {% csrf_token %}
 
-        <div class="mb-3">
-            <label for="{{ form.last_name.id_for_label }}" class="form-label">Apelido (Sobrenome)</label>
-            {{ form.last_name }}
-            {% for error in form.last_name.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome de Utilizador</label>
+                    {{ form.username }}
+                    <div class="form-text text-white-50" style="font-size: 0.7rem;">
+                        {{ form.username.help_text }}
+                    </div>
+                </div>
 
-         <div class="mb-3">
-            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-            {{ form.email }}
-            {% for error in form.email.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
+                <div class="row align-items-end">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nome</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Sobrenome</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
 
-        <div class="mb-3">
-            <label for="{{ form.role.id_for_label }}" class="form-label">Eu sou:</label>
-            {{ form.role }}
-            {% for error in form.role.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
+                <div class="mb-3">
+                    <label class="form-label">Data de Nascimento</label>
+                    {{ form.data_nascimento }}
+                    <div class="form-text text-white-50">Obrigatório para validação de perfil.</div>
+                </div>
 
-        <div class="mb-3">
-            <label for="{{ form.password1.id_for_label }}" class="form-label">Crie uma Senha</label>
-            {{ form.password1 }}
-            {% if form.password1.help_text %}
-              <small class="form-text text-muted">{{ form.password1.help_text|safe }}</small>
-            {% endif %}
-             {% for error in form.password1.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
-        
-        <div class="mb-3">
-            <label for="{{ form.password2.id_for_label }}" class="form-label">Confirme a Senha</label>
-            {{ form.password2 }}
-             {% for error in form.password2.errors %}
-              <div class="invalid-feedback d-block">{{ error }}</div>
-            {% endfor %}
-        </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    {{ form.email }}
+                </div>
 
-        <div class="d-grid mt-4">
-            <button type="submit" class="btn btn-primary btn-lg">Fazer Cadastro</button>
-        </div>
-    </form>
+                <div class="mb-3">
+                    <label class="form-label">Eu sou:</label>
+                    {{ form.role }}
+                </div>
 
-    <div class="text-center mt-3">
-        <p class="text-muted"><small>Já tem conta? <a href="{% url 'login' %}">Faça login</a></small></p>
+                <div class="mb-3">
+                    <label class="form-label">Crie uma Senha</label>
+                    {{ form.password1 }}
+                    <div class="helptext mt-2" style="font-size: 0.75rem; opacity: 0.8; line-height: 1.2;">
+                        <ul style="padding-left: 0; list-style: none;">
+                            {% for error in form.password1.errors %}
+                                <li class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                            {{ form.password1.help_text|safe }} 
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Confirme a Senha</label>
+                    {{ form.password2 }}
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Fazer Cadastro</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="mb-0"><small>Já tem conta? <a href="{% url 'login' %}" class="fw-bold text-brand">Faça login</a></small></p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -5,38 +5,48 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row justify-content-center">
-        
-        <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow text-center p-4">
-                <div class="mb-3">
-                    {% if user.profile.foto %}
-                        <img src="{{ user.profile.foto.url }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
-                    {% else %}
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
-                    {% endif %}
-                </div>
-                <h3>{{ user.get_full_name|default:user.username }}</h3>
-                <p class="text-muted">{{ user.profile.get_role_display }}</p>
-                
-                <div class="card bg-light mt-3 p-2 text-start">
-                    <small class="text-muted fw-bold">MATRÍCULA (ID):</small>
-                    <p class="mb-0 fs-5">@{{ user.id|stringformat:"06d" }}</p>
-                </div>
+    <h1 class="page-title text-center mb-4">Meu Currículo & Perfil</h1>
 
-                <div class="mt-4">
-                     <a href="{% url 'password_reset' %}" class="btn btn-outline-danger w-100"> Alterar Senha</a>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row">
+            
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 shadow p-4 text-center">
+                    <div class="mb-3 d-flex justify-content-center">
+                        {% if user.profile.foto %}
+                            <img src="{{ user.profile.foto.url }}" class="rounded-circle img-thumbnail" style="width: 180px; height: 180px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center mx-auto" style="width: 180px; height: 180px; font-size: 4rem; font-weight: bold;">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="text-brand">{{ user.get_full_name|default:user.username }}</h3>
+                    <p class="text-muted">{{ user.profile.get_role_display }}</p>
+                    
+                    <div class="mb-3 text-start">
+                        <label class="form-label small">Alterar Foto</label>
+                        {{ p_form.foto }}
+                    </div>
+
+                    <div class="card bg-dark border border-secondary p-3 mt-2 text-start">
+                        <small class="text-muted fw-bold d-block mb-1">MATRÍCULA (ID):</small>
+                        <span class="fs-5 text-white">#{{ user.id|stringformat:"06d" }}</span>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'password_reset' %}" class="btn btn-outline-danger w-100"> Alterar Senha</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-8">
-            <div class="card border-0 shadow p-4">
-                <h4 class="mb-4">Editar Informações</h4>
+            <div class="col-md-8">
                 
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
+                <div class="card border-0 shadow p-4 mb-4">
+                    <h4 class="mb-4 text-brand">📄 Dados Pessoais</h4>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Nome</label>
@@ -47,29 +57,92 @@
                             {{ u_form.last_name }}
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        {{ u_form.email }}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            {{ u_form.email }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Data de Nascimento</label>
+                            {{ p_form.data_nascimento }}
+                        </div>
                     </div>
-
                     <div class="mb-3">
-                        <label class="form-label">Bio (Sobre mim)</label>
+                        <label class="form-label">Biografia / Resumo Profissional</label>
                         {{ p_form.bio }}
                     </div>
+                </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Foto de Perfil</label>
-                        {{ p_form.foto }}
+                <div class="card border-0 shadow p-4 mb-4">
+                    <h4 class="mb-4 text-brand">📍 Contato & Localização</h4>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Telefone / WhatsApp</label>
+                            {{ p_form.telefone }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Cidade</label>
+                            {{ p_form.cidade }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Estado</label>
+                            {{ p_form.estado }}
+                        </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">LinkedIn</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark text-white border-secondary"><i class="ri-linkedin-box-fill"></i></span>
+                            {{ p_form.linkedin }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">GitHub</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark text-white border-secondary"><i class="ri-github-fill"></i></span>
+                            {{ p_form.github }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Portfólio / Site</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark text-white border-secondary"><i class="ri-global-line"></i></span>
+                            {{ p_form.portfolio }}
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                <div class="card border-0 shadow p-4 mb-4">
+                    <h4 class="mb-4 text-brand">💼 Carreira & Objetivos</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Momento Profissional</label>
+                            {{ p_form.momento_profissional }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Modalidade de Trabalho preferido</label>
+                            {{ p_form.modalidade_trabalho }}
+                        </div>
                     </div>
-                </form>
+                    <div class="mb-3">
+                        <label class="form-label">Pretensão Salarial</label>
+                        {{ p_form.pretensao_salarial }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Principais Tecnologias</label>
+                        {{ p_form.tecnologias }}
+                        <div class="form-text text-light opacity-50">Ex: Java, Python, React, AWS</div>
+                    </div>
+                </div>
+
+                <div class="d-grid mb-5">
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-lg">
+                     SALVAR CURRÍCULO ATUALIZADO
+                    </button>
+                </div>
+
             </div>
         </div>
-
-    </div>
+    </form>
 </div>
 {% endblock %}

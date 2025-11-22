@@ -1,10 +1,63 @@
+import os
+from django.conf import settings
+from django.contrib.staticfiles import finders
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
+from django.template.loader import get_template
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from django.utils import timezone 
+from xhtml2pdf import pisa 
+
 from .models import Curso, Matricula, DisponibilidadeSala, MaterialAula
-# IMPORTANTE: Adicionei MaterialAulaForm aqui na linha abaixo
-from .forms import UserUpdateForm, ProfileUpdateForm, CursoForm, CustomUserCreationForm, MaterialAulaForm
+from .forms import (
+    UserUpdateForm, ProfileUpdateForm, CursoForm, 
+    CustomUserCreationForm, MaterialAulaForm, ConfiguracoesForm
+)
+
+# Adicione este import no topo junto com os outros
+from django.core.files.storage import default_storage
+
+# --- FUNÇÃO AUXILIAR PARA O PDF ENCONTRAR ARQUIVOS ---
+def link_callback(uri, rel):
+    """
+    Converte URLs HTML (como /static/...) em caminhos absolutos do sistema
+    de arquivos (para o xhtml2pdf).
+    """
+    sUrl = settings.STATIC_URL      
+    mUrl = settings.MEDIA_URL      
+
+    # 1. Trata arquivos STATIC (Fontes, Logos)
+    if uri.startswith(sUrl):
+        relative_path = uri.replace(sUrl, '')
+        
+        # Encontra o caminho ABSOLUTO do arquivo usando o finders
+        path = finders.find(relative_path)
+        
+        if path:
+            if isinstance(path, (list, tuple)):
+                path = path[0]
+            
+            # Garante que o caminho retornado está dentro do projeto e existe
+            if os.path.exists(path):
+                return path
+        
+        # Fallback se o finders falhar (usa o primeiro STATICFILES_DIRS)
+        elif settings.STATICFILES_DIRS:
+            path = os.path.join(settings.STATICFILES_DIRS[0], relative_path)
+            if os.path.exists(path):
+                return path
+            
+    # 2. Trata arquivos MEDIA (Uploads)
+    elif uri.startswith(mUrl):
+        path = os.path.join(settings.MEDIA_ROOT, uri.replace(mUrl, ""))
+        if os.path.exists(path):
+            return path
+            
+    return uri
 
 def login_view(request):
     if request.user.is_authenticated: return redirect('home')
@@ -65,10 +118,14 @@ def aluno_view(request):
         return redirect('home')
     aluno = request.user
     total_cursos_sistema = Curso.objects.count()
+    
+    # Lógica de cursos
     cursos_matriculados_ids = Matricula.objects.filter(aluno=aluno).values_list('curso__id', flat=True)
     cursos_disponiveis = Curso.objects.exclude(id__in=cursos_matriculados_ids)
+    
     matriculas_andamento = Matricula.objects.filter(aluno=aluno, status='em_andamento').select_related('curso', 'curso__agenda')
     matriculas_finalizadas = Matricula.objects.filter(aluno=aluno, status='finalizado').select_related('curso')
+    
     context = {
         'cursos_disponiveis': cursos_disponiveis,
         'matriculas_andamento': matriculas_andamento,
@@ -95,18 +152,15 @@ def professor_view(request):
         form = CursoForm()
 
     cursos_ministrados = Curso.objects.filter(professor=professor).select_related('agenda')
-    
-    # IMPORTANTE: Cria o form vazio e manda para o HTML
     form_material = MaterialAulaForm()
 
     context = {
         'cursos_ministrados': cursos_ministrados,
         'form_cadastrar_curso': form,
-        'form_material': form_material, # <--- AQUI ESTÁ O SEGREDINHO
+        'form_material': form_material,
     }
     return render(request, 'core/professor.html', context)
 
-# NOVA VIEW PARA ADICIONAR MATERIAL (Processa o formulário do modal)
 @login_required
 def adicionar_material_view(request, curso_id):
     curso = get_object_or_404(Curso, id=curso_id, professor=request.user)
@@ -138,3 +192,78 @@ def matricular_aluno_view(request, curso_id):
     else:
         messages.info(request, "Você já está matriculado neste curso.")
     return redirect('aluno')
+
+@login_required
+def configuracoes_view(request):
+    if request.method == 'POST':
+        form = ConfiguracoesForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Suas preferências foram salvas!")
+            return redirect('configuracoes')
+    else:
+        form = ConfiguracoesForm(instance=request.user.profile)
+    
+    return render(request, 'core/configuracoes.html', {'form': form})
+
+@login_required
+def deletar_conta_view(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        logout(request)
+        messages.info(request, "Sua conta foi excluída com sucesso.")
+        return redirect('login')
+    return redirect('configuracoes')
+
+# --- NOVAS VIEWS DO CERTIFICADO E GRADUAÇÃO ---
+
+@login_required
+def graduar_aluno_view(request, matricula_id):
+    # Busca a matrícula específica
+    matricula = get_object_or_404(Matricula, id=matricula_id)
+    
+    # SEGURANÇA: Só o professor do curso ou um Admin pode fazer isso
+    if request.user != matricula.curso.professor and not request.user.is_superuser:
+        messages.error(request, "Apenas o professor responsável pode concluir este curso.")
+        return redirect('home')
+    
+    # Atualiza o status
+    matricula.status = 'finalizado'
+    matricula.data_conclusao = timezone.now().date()
+    matricula.save()
+    
+    messages.success(request, f"O aluno {matricula.aluno.first_name} foi graduado com sucesso!")
+    return redirect('professor')
+
+@login_required
+def gerar_certificado_view(request, curso_id):
+    # Pega a matrícula finalizada
+    matricula = get_object_or_404(Matricula, aluno=request.user, curso_id=curso_id, status='finalizado')
+    
+    # O ReportLab já conhece a fonte Gacor graças ao apps.py
+    context = {
+        'aluno': matricula.aluno.first_name + " " + matricula.aluno.last_name,
+        'curso': matricula.curso.nome_curso,
+        'carga_horaria': matricula.curso.carga_horaria,
+        'data_conclusao': matricula.data_conclusao,
+        'professor': matricula.curso.professor.get_full_name() if matricula.curso.professor else "Coordenação Pedagógica",
+        'pagesize': 'A4 landscape',
+    }
+    
+    template_path = 'core/certificado_pdf.html'
+    response = HttpResponse(content_type='application/pdf')
+    filename = f"Certificado_{matricula.curso.nome_curso}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    # Chama o PISA com o link_callback
+    pisa_status = pisa.CreatePDF(
+        html, dest=response, link_callback=link_callback
+    )
+    
+    if pisa_status.err:
+        return HttpResponse('Erro ao gerar PDF <pre>' + html + '</pre>')
+    return response
