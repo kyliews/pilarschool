@@ -1,57 +1,57 @@
+# core/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db import transaction
-from .models import Profile, Curso, Sala
+from .models import Profile, Curso, DisponibilidadeSala
 
 class CursoForm(forms.ModelForm):
+    # Campo extra para selecionar a agenda
+    agenda_disponivel = forms.ModelChoiceField(
+        queryset=DisponibilidadeSala.objects.filter(livre=True),
+        label="Escolha uma Sala e Horário Disponível",
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        empty_label="Selecione uma opção..."
+    )
+
     class Meta:
         model = Curso
-        fields = ['nome_curso', 'descricao', 'sala'] 
+        fields = ['nome_curso', 'descricao'] 
+        # Removemos 'agenda' do fields direto porque vamos tratar manualmente
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['nome_curso'].widget.attrs.update({'class': 'form-control'})
         self.fields['descricao'].widget.attrs.update({'class': 'form-control'})
-        self.fields['sala'].widget.attrs.update({'class': 'form-select'})
-class CustomUserCreationForm(UserCreationForm):
 
-    first_name = forms.CharField(
-        max_length=100, 
-        required=True, 
-        label="Nome",
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-    last_name = forms.CharField(
-        max_length=100, 
-        required=False, 
-        label="Apelido",
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-    email = forms.EmailField(
-        required=True, 
-        label="Email",
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
-    )
-    
-    ROLE_CHOICES = [
-        ('aluno', 'Aluno'),
-        ('professor', 'Professor'),
-    ]
-    role = forms.ChoiceField(
-        choices=ROLE_CHOICES,
-        required=True,
-        label="Eu sou:",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
+    def save(self, commit=True):
+        curso = super().save(commit=False)
+        # Pega a agenda selecionada
+        agenda = self.cleaned_data['agenda_disponivel']
+        
+        # Marca a agenda como ocupada (livre=False)
+        agenda.livre = False
+        agenda.save()
+        
+        # Associa ao curso
+        curso.agenda = agenda
+        
+        if commit:
+            curso.save()
+        return curso
+
+# ... (O CustomUserCreationForm continua igual, não precisa mudar)
+class CustomUserCreationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=100, required=True, label="Nome", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=100, required=False, label="Apelido", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(required=True, label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    ROLE_CHOICES = [('aluno', 'Aluno'), ('professor', 'Professor')]
+    role = forms.ChoiceField(choices=ROLE_CHOICES, required=True, label="Eu sou:", widget=forms.Select(attrs={'class': 'form-select'}))
 
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
-
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-        }
+        widgets = {'username': forms.TextInput(attrs={'class': 'form-control'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -60,17 +60,13 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['password2'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
         self.fields['password2'].label = "Confirme a Senha"
 
-
     @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
-        
         if commit:
             user.save()
-            user.profile.role = self.cleaned_data['role']
-            user.profile.save()
-
+            Profile.objects.create(user=user, role=self.cleaned_data['role'])
         return user
