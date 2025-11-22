@@ -9,6 +9,5 @@ urlpatterns = [
     path('', include('core.urls')),
 ]
 
-# Adicione isso no final para servir as imagens
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
