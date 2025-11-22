@@ -12,6 +12,7 @@ django
 sqlite3 (banco de dados padrão)
 html5
 css3
+pillow para imagem do perfil
 bootstrap 5 (para o layout e componentes como modais e abas)
 javascript (nativo do bootstrap, para interatividade)
 ````
