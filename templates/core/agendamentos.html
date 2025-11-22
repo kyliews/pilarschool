@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Agendamentos - Conecta Pilar{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="page-title">Agendamentos</h1>
+    <p class="lead">Consulte horários livres de laboratórios e salas de estudo.</p>
+</div>
+
+<div class="p-4 bg-white rounded-3 border mt-5">
+    <h3 class="mb-4 text-center">Salas Disponíveis</h3>
+    
+    {% if not agendas_livres %}
+        <div class="alert alert-info text-center">
+            No momento, não há salas livres para agendamento.
+        </div>
+    {% else %}
+        <div class="course-grid">
+            {% for agenda in agendas_livres %}
+                <div class="course-card">
+                    <h4>{{ agenda.sala.nome_sala }}</h4>
+                    <p class="text-muted">{{ agenda.sala.bloco }}</p>
+                    <hr>
+                    <p><strong>Datas:</strong> {{ agenda.data_inicio|date:"d/m" }} a {{ agenda.data_fim|date:"d/m" }}</p>
+                    <p><strong>Horário:</strong> {{ agenda.dias_horarios }}</p>
+                    
+                    <button class="btn btn-outline-primary mt-3 w-100">Reservar Horário</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

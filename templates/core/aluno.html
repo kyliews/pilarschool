@@ -10,46 +10,66 @@
 </div>
 
 <ul class="nav nav-tabs mt-5" id="alunoTabs" role="tablist">
-    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#disponiveis">Cursos Disponíveis</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#andamento">Cursos em Andamento</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#finalizados">Cursos Finalizados</button></li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="disponiveis-tab" data-bs-toggle="tab" data-bs-target="#disponiveis" type="button" role="tab" aria-controls="disponiveis" aria-selected="true">
+            Cursos Disponíveis
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="andamento-tab" data-bs-toggle="tab" data-bs-target="#andamento" type="button" role="tab" aria-controls="andamento" aria-selected="false">
+            Cursos em Andamento
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="finalizados-tab" data-bs-toggle="tab" data-bs-target="#finalizados" type="button" role="tab" aria-controls="finalizados" aria-selected="false">
+            Cursos Finalizados
+        </button>
+    </li>
 </ul>
 
-<div class="tab-content">
-    <!-- Cursos Disponíveis -->
-    <div class="tab-pane fade show active" id="disponiveis">
+<div class="tab-content" id="alunoTabsContent">
+    
+    <!-- Aba 1: Cursos Disponíveis -->
+    <div class="tab-pane fade show active" id="disponiveis" role="tabpanel" aria-labelledby="disponiveis-tab">
         <div class="p-4 bg-white rounded-bottom border border-top-0">
             
-            <!-- LÓGICA CORRIGIDA AQUI -->
             {% if total_cursos_sistema == 0 %}
-                <div class="alert alert-warning">
-                    Ainda não há cursos cadastrados na plataforma. Volte em breve!
+                <div class="alert alert-warning text-center">
+                    <h4>Ainda não há cursos cadastrados na plataforma.</h4>
+                    <p>Volte em breve!</p>
                 </div>
             {% elif not cursos_disponiveis %}
-                <div class="alert alert-info">
-                    Uau! Você já está matriculado em todos os cursos disponíveis.
+                <div class="alert alert-info text-center">
+                    <h4>Uau! Você já está matriculado em todos os cursos disponíveis.</h4>
                 </div>
             {% else %}
                 <div class="course-grid">
                     {% for curso in cursos_disponiveis %}
+                        <!-- CARD DO CURSO (Clique abre o modal) -->
                         <div class="course-card" data-bs-toggle="modal" data-bs-target="#modal-curso-{{ curso.id }}">
                             <h4>{{ curso.nome_curso }}</h4>
-                            <p>Professor: {{ curso.professor.get_full_name|default:curso.professor.username }}</p>
-                            <!-- Mostra datas se disponível -->
+                            
+                            {% if curso.professor %}
+                                <p>Professor: {{ curso.professor.get_full_name|default:curso.professor.username }}</p>
+                            {% else %}
+                                <p>Professor: A definir</p>
+                            {% endif %}
+
                             {% if curso.agenda %}
-                                <small class="text-muted">{{ curso.agenda.dias_horarios }}</small>
+                                <small class="text-muted d-block mt-2">{{ curso.agenda.dias_horarios }}</small>
                             {% endif %}
                         </div>
 
-                        <!-- Modal -->
+                        <!-- MODAL DE DETALHES (Pop-up) -->
                         <div class="modal fade" id="modal-curso-{{ curso.id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">{{ curso.nome_curso }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
+                                        <!-- Barra de Informações -->
                                         <div class="modal-info-bar">
                                             {% if curso.agenda %}
                                                 <span><strong>LOCAL:</strong> {{ curso.agenda.sala.bloco }}</span>
@@ -57,18 +77,21 @@
                                                 <span><strong>DATAS:</strong> {{ curso.agenda.data_inicio|date:"d/m" }} a {{ curso.agenda.data_fim|date:"d/m" }}</span>
                                                 <span><strong>HORÁRIO:</strong> {{ curso.agenda.dias_horarios }}</span>
                                             {% else %}
-                                                <span>Datas a definir</span>
+                                                <span>Datas e local a definir</span>
                                             {% endif %}
                                         </div>
+
+                                        <!-- Descrição / Ementa -->
                                         <div class="modal-section">
                                             <h5>Ementa</h5>
-                                            <p>{{ curso.descricao|default:"Sem descrição." }}</p>
+                                            <p>{{ curso.descricao|default:"Sem descrição disponível para este curso." }}</p>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                         <form action="{% url 'matricular' curso.id %}" method="POST">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-success">MATRICULE-SE</button>
+                                            <button type="submit" class="btn btn-success fw-bold">MATRICULE-SE</button>
                                         </form>
                                     </div>
                                 </div>
@@ -79,32 +102,90 @@
             {% endif %}
         </div>
     </div>
-    
-    <!-- MANTENHA O RESTO DAS ABAS (andamento/finalizados) IGUAIS AO ANTERIOR -->
-    <div class="tab-pane fade" id="andamento">
+
+    <!-- Aba 2: Cursos em Andamento -->
+    <div class="tab-pane fade" id="andamento" role="tabpanel" aria-labelledby="andamento-tab">
         <div class="p-4 bg-white rounded-bottom border border-top-0">
-             <!-- Copie o conteúdo da aba Andamento do arquivo anterior -->
-             <!-- Apenas adicione a lógica de exibir datas se quiser -->
-             {% if not matriculas_andamento %}
-                <div class="alert alert-secondary">Você não está em nenhum curso.</div>
-             {% else %}
+            {% if not matriculas_andamento %}
+                <div class="alert alert-secondary text-center">Você não está em nenhum curso no momento.</div>
+            {% else %}
                 <div class="course-grid">
                     {% for matricula in matriculas_andamento %}
-                        <div class="course-card">
+                        <div class="course-card" data-bs-toggle="modal" data-bs-target="#modal-matricula-{{ matricula.id }}">
                             <h4>{{ matricula.curso.nome_curso }}</h4>
-                            <p>{{ matricula.curso.agenda.dias_horarios|default:"-" }}</p>
+                            {% if matricula.curso.professor %}
+                                <p>Professor: {{ matricula.curso.professor.get_full_name|default:matricula.curso.professor.username }}</p>
+                            {% else %}
+                                <p>Professor: A definir</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Modal Andamento -->
+                        <div class="modal fade" id="modal-matricula-{{ matricula.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{ matricula.curso.nome_curso }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="modal-info-bar">
+                                            {% if matricula.curso.agenda %}
+                                                <span><strong>LOCAL:</strong> {{ matricula.curso.agenda.sala.bloco }}</span>
+                                                <span><strong>SALA:</strong> {{ matricula.curso.agenda.sala.nome_sala }}</span>
+                                                <span><strong>HORÁRIO:</strong> {{ matricula.curso.agenda.dias_horarios }}</span>
+                                            {% else %}
+                                                <span>Local a definir</span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="modal-section">
+                                            <h5>Materiais</h5>
+                                            <div class="material-grid">
+                                                {% for material in matricula.curso.materiais.all %}
+                                                    <a href="{{ material.url }}" target="_blank" class="material-item">
+                                                        {{ material.nome_material }}
+                                                    </a>
+                                                {% empty %}
+                                                    <p class="text-muted w-100 text-center">Nenhum material disponível ainda.</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-section mt-4">
+                                            <h5>Descrição</h5>
+                                            <p>{{ matricula.curso.descricao|default:"Sem descrição." }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
-             {% endif %}
+            {% endif %}
         </div>
     </div>
-    
-    <div class="tab-pane fade" id="finalizados">
-        <!-- Conteúdo Finalizados -->
-         <div class="p-4 bg-white rounded-bottom border border-top-0">
-            <p>Sem cursos finalizados.</p>
-         </div>
+
+    <!-- Aba 3: Cursos Finalizados -->
+    <div class="tab-pane fade" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
+        <div class="p-4 bg-white rounded-bottom border border-top-0">
+            {% if not matriculas_finalizadas %}
+                <div class="alert alert-secondary text-center">Você ainda não finalizou nenhum curso.</div>
+            {% else %}
+                <div class="course-grid">
+                    {% for matricula in matriculas_finalizadas %}
+                        <div class="course-card">
+                            <h4>{{ matricula.curso.nome_curso }}</h4>
+                            <p>Concluído ✅</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </div>
+
 </div>
 {% endblock %}

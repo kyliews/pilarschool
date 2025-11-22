@@ -18,9 +18,8 @@ urlpatterns = [
     # Ações
     path('matricular/<int:curso_id>/', views.matricular_aluno_view, name='matricular'),
 
-    # -----------------------------------------------------------------
-    # NOVAS ROTAS DE REDEFINIÇÃO DE SENHA
-    # -----------------------------------------------------------------
+    path('agendamentos/', views.agendamentos_view, name='agendamentos'),
+
     path('password_reset/', 
          auth_views.PasswordResetView.as_view(
              template_name="core/password_reset_form.html",

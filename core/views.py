@@ -1,9 +1,9 @@
-# core/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Curso, Matricula
+from .models import Curso, Matricula, DisponibilidadeSala
 from .forms import CursoForm, CustomUserCreationForm
 
 # ... (login_view, register_view, logout_view, home_view MANTÉM IGUAL) ...
@@ -101,6 +101,24 @@ def professor_view(request):
         'form_cadastrar_curso': form,
     }
     return render(request, 'core/professor.html', context)
+
+@login_required
+def agendamentos_view(request):
+    """
+    Página de Agendamentos para o Aluno.
+    Mostra horários de laboratórios ou salas de estudo disponíveis.
+    """
+    if request.user.profile.role != 'aluno':
+        return redirect('home')
+    
+    # Exemplo: Buscar todas as disponibilidades que AINDA estão livres
+    # (Ou seja, que ainda não foram ocupadas por um curso)
+    agendas_livres = DisponibilidadeSala.objects.filter(livre=True).select_related('sala')
+    
+    context = {
+        'agendas_livres': agendas_livres
+    }
+    return render(request, 'core/agendamentos.html', context)
 
 @login_required
 def matricular_aluno_view(request, curso_id):
