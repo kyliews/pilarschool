@@ -58,9 +58,8 @@ ativar (mac/linux)
 ###### source .venv/bin/activate
 
 3. instale as dependências:
-(neste projeto, é apenas o django)
 
-###### pip install django
+######  pip install -r requirements.txt
 
 4.  crie o banco de dados (migrações) este comando cria o arquivo db.sqlite3 e todas as tabelas (auth, core, etc.).
 
