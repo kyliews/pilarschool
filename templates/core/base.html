@@ -37,17 +37,30 @@
                 {% endif %}
             </ul>
 
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
                 {% if user.is_authenticated %}
+                    
                     <li class="nav-item">
-                        <span class="navbar-text me-3">
-                            Olá, {{ user.get_full_name|default:user.username }}! 
-                            ({% if user.is_superuser %}Superuser{% else %}{{ user.profile.get_role_display }}{% endif %})
-                        </span>
+                        <a class="nav-link d-flex align-items-center gap-2" href="{% url 'perfil' %}" title="Ir para meu perfil">
+                            
+                            {% if user.profile.foto %}
+                                <img src="{{ user.profile.foto.url }}" alt="Foto de perfil" class="rounded-circle border" width="35" height="35" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+                                    {{ user.username|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+            
+                            <span class="fw-bold text-dark">
+                                {{ user.get_full_name|default:user.username }}
+                            </span>
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-danger" href="{% url 'logout' %}">Sair (Logout)</a>
+            
+                    <li class="nav-item ms-3">
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'logout' %}">Sair</a>
                     </li>
+            
                 {% else %}
                     <li class="nav-item">
                         <a class="btn btn-primary" href="{% url 'login' %}">Entrar</a>

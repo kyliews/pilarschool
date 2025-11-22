@@ -15,6 +15,9 @@ urlpatterns = [
     path('aluno/', views.aluno_view, name='aluno'),
     path('professor/', views.professor_view, name='professor'),
     
+    #rota de perfil de aluno
+    path('perfil/', views.perfil_view, name='perfil'),
+
     # Ações
     path('matricular/<int:curso_id>/', views.matricular_aluno_view, name='matricular'),
 

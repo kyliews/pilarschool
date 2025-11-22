@@ -1,6 +1,6 @@
-# core/models.py
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_delete
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -12,17 +12,19 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='', blank=True)
+    
+    # NOVOS CAMPOS
+    bio = models.TextField(blank=True, null=True, help_text="Fale um pouco sobre você")
+    foto = models.ImageField(upload_to='perfil/', blank=True, null=True, default='perfil/default.png')
 
     def __str__(self):
         return f"{self.user.username} - {self.get_role_display()}"
 
-#sinal para criar/atualizar perfil
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.get_or_create(user=instance)
     instance.profile.save()
-
 
 class Sala(models.Model):
     nome_sala = models.CharField(max_length=255)
@@ -38,6 +40,8 @@ class DisponibilidadeSala(models.Model):
     data_fim = models.DateField(verbose_name="Data de Término")
     dias_horarios = models.CharField(max_length=100, help_text="Ex: Seg/Qua 19:00 - 21:00")
     livre = models.BooleanField(default=True)
+    # CAMPO DE LINK MANTIDO
+    link_aula = models.URLField(max_length=500, blank=True, null=True, help_text="Link do Google Meet ou Zoom")
 
     def __str__(self):
         status = "✅ Livre" if self.livre else "❌ Ocupada"
@@ -52,7 +56,12 @@ class Curso(models.Model):
         null=True, 
         limit_choices_to={'profile__role': 'professor'}
     )
-    agenda = models.OneToOneField(DisponibilidadeSala, on_delete=models.SET_NULL, null=True)
+    agenda = models.OneToOneField(
+        DisponibilidadeSala, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        related_name='curso_associado' # RELATED_NAME MANTIDO
+    )
 
     def __str__(self):
         return self.nome_curso
@@ -84,3 +93,13 @@ class MaterialAula(models.Model):
 
     def __str__(self):
         return f"{self.nome_material} ({self.curso.nome_curso})"
+
+#liberar a sala quando o curso for deletado.
+@receiver(post_delete, sender=Curso)
+def liberar_sala_ao_deletar_curso(sender, instance, **kwargs):
+    """
+    Quando um curso é deletado, a agenda associada deve voltar a ficar livre.
+    """
+    if instance.agenda:
+        instance.agenda.livre = True
+        instance.agenda.save()

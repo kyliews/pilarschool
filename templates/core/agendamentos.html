@@ -1,33 +1,47 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Agendamentos - Conecta Pilar{% endblock %}
+{% block title %}Minhas Aulas - Conecta Pilar{% endblock %}
 
 {% block content %}
 <div class="text-center">
-    <h1 class="page-title">Agendamentos</h1>
-    <p class="lead">Consulte horários livres de laboratórios e salas de estudo.</p>
+    <h1 class="page-title">Minhas Aulas</h1>
+    <p class="lead">Confira seus horários e acesse os links das aulas.</p>
 </div>
 
 <div class="p-4 bg-white rounded-3 border mt-5">
-    <h3 class="mb-4 text-center">Salas Disponíveis</h3>
+    <h3 class="mb-4 text-center">Quadro de Horários</h3>
     
-    {% if not agendas_livres %}
+    {% if not minhas_aulas %}
         <div class="alert alert-info text-center">
-            No momento, não há salas livres para agendamento.
+            Você ainda não está matriculado em cursos com agendamento definido.
         </div>
     {% else %}
         <div class="course-grid">
-            {% for agenda in agendas_livres %}
-                <div class="course-card">
-                    <h4>{{ agenda.sala.nome_sala }}</h4>
-                    <p class="text-muted">{{ agenda.sala.bloco }}</p>
-                    <hr>
-                    <p><strong>Datas:</strong> {{ agenda.data_inicio|date:"d/m" }} a {{ agenda.data_fim|date:"d/m" }}</p>
-                    <p><strong>Horário:</strong> {{ agenda.dias_horarios }}</p>
-                    
-                    <button class="btn btn-outline-primary mt-3 w-100">Reservar Horário</button>
-                </div>
+            {% for matricula in minhas_aulas %}
+                {% if matricula.curso.agenda %}
+                    <div class="course-card">
+                        <h4 class="text-primary">{{ matricula.curso.nome_curso }}</h4>
+                        
+                        <p class="text-muted mb-1">
+                            <strong>Sala:</strong> {{ matricula.curso.agenda.sala.nome_sala }} - Bloco {{ matricula.curso.agenda.sala.bloco }}
+                        </p>
+                        <hr>
+                        
+                        <p><strong>Datas:</strong> {{ matricula.curso.agenda.data_inicio|date:"d/m" }} a {{ matricula.curso.agenda.data_fim|date:"d/m" }}</p>
+                        <p><strong>Horário:</strong> {{ matricula.curso.agenda.dias_horarios }}</p>
+                        
+                        {% if matricula.curso.agenda.link_aula %}
+                            <a href="{{ matricula.curso.agenda.link_aula }}" target="_blank" class="btn btn-success mt-3 w-100 fw-bold">
+                                📹 Acessar Aula Agora
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary mt-3 w-100" disabled>
+                                Link não disponível
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}

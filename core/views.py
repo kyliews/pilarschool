@@ -4,10 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Curso, Matricula
 from .models import Curso, Matricula, DisponibilidadeSala
+from .forms import UserUpdateForm, ProfileUpdateForm
 from .forms import CursoForm, CustomUserCreationForm
-
-# ... (login_view, register_view, logout_view, home_view MANTÉM IGUAL) ...
-# Vou colar apenas as views alteradas para economizar espaço, mas mantenha as de autenticação!
 
 def login_view(request):
     # (Mantenha seu código de login aqui)
@@ -34,6 +32,27 @@ def register_view(request):
     return render(request, 'core/register.html', {'form': form})
 
 @login_required
+def perfil_view(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, 'Seu perfil foi atualizado com sucesso!')
+            return redirect('perfil')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+    return render(request, 'core/perfil.html', context)
+
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('login')
@@ -48,8 +67,6 @@ def home_view(request):
         elif role == 'professor': return redirect('professor')
         else: return redirect('/admin/')
     except: return redirect('login')
-
-# --- VIEWS ALTERADAS ABAIXO ---
 
 @login_required
 def aluno_view(request):
@@ -105,24 +122,30 @@ def professor_view(request):
 @login_required
 def agendamentos_view(request):
     """
-    Página de Agendamentos para o Aluno.
-    Mostra horários de laboratórios ou salas de estudo disponíveis.
+    Página de Aulas/Horários para o Aluno.
+    Mostra os cursos em que o aluno está matriculado e seus horários/links.
     """
     if request.user.profile.role != 'aluno':
         return redirect('home')
-    
-    # Exemplo: Buscar todas as disponibilidades que AINDA estão livres
-    # (Ou seja, que ainda não foram ocupadas por um curso)
-    agendas_livres = DisponibilidadeSala.objects.filter(livre=True).select_related('sala')
+   
+    minhas_aulas = Matricula.objects.filter(
+        aluno=request.user, 
+        status='em_andamento'
+    ).select_related('curso', 'curso__agenda', 'curso__agenda__sala')
     
     context = {
-        'agendas_livres': agendas_livres
+        'minhas_aulas': minhas_aulas
     }
     return render(request, 'core/agendamentos.html', context)
-
 @login_required
 def matricular_aluno_view(request, curso_id):
-    # (Mantenha seu código aqui)
     curso = get_object_or_404(Curso, id=curso_id)
-    Matricula.objects.get_or_create(aluno=request.user, curso=curso)
+    # O get_or_create evita duplicidade, mas é bom garantir
+    obj, created = Matricula.objects.get_or_create(aluno=request.user, curso=curso)
+    
+    if created: #adicionar uma mensagem de sucesso para confirmar a ação
+        messages.success(request, f"Matrícula realizada em {curso.nome_curso} com sucesso!")
+    else:
+        messages.info(request, "Você já está matriculado neste curso.")
+        
     return redirect('aluno')

@@ -5,6 +5,28 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from .models import Profile, Curso, DisponibilidadeSala
 
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        # Widgets para ficar bonito com Bootstrap
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['foto', 'bio']
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'foto': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
 class CursoForm(forms.ModelForm):
     agenda_disponivel = forms.ModelChoiceField(
         queryset=DisponibilidadeSala.objects.filter(livre=True),

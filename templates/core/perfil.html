@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil - Conecta Pilar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow text-center p-4">
+                <div class="mb-3">
+                    {% if user.profile.foto %}
+                        <img src="{{ user.profile.foto.url }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
+                    {% endif %}
+                </div>
+                <h3>{{ user.get_full_name|default:user.username }}</h3>
+                <p class="text-muted">{{ user.profile.get_role_display }}</p>
+                
+                <div class="card bg-light mt-3 p-2 text-start">
+                    <small class="text-muted fw-bold">MATRÍCULA (ID):</small>
+                    <p class="mb-0 fs-5">@{{ user.id|stringformat:"06d" }}</p>
+                </div>
+
+                <div class="mt-4">
+                     <a href="{% url 'password_reset' %}" class="btn btn-outline-danger w-100"> Alterar Senha</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card border-0 shadow p-4">
+                <h4 class="mb-4">Editar Informações</h4>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nome</label>
+                            {{ u_form.first_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Sobrenome</label>
+                            {{ u_form.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ u_form.email }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Bio (Sobre mim)</label>
+                        {{ p_form.bio }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Foto de Perfil</label>
+                        {{ p_form.foto }}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
