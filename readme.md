@@ -7,14 +7,15 @@ o sistema é desenhado para gerir cursos, matrículas e utilizadores, com uma se
 
 ## tecnologias utilizadas
 ```
-python
-django
-sqlite3 (banco de dados padrão)
-html5
-css3
-pillow para imagem do perfil
-bootstrap 5 (para o layout e componentes como modais e abas)
-javascript (nativo do bootstrap, para interatividade)
+Categoria	Tecnologia	Uso
+Backend	Python 3	Linguagem de programação principal.
+Framework	Django (v5.2.8+)	Desenvolvimento rápido e seguro.
+Banco de Dados	SQLite3	Banco de dados padrão (dev/protótipo).
+PDF	xhtml2pdf / ReportLab	Geração de certificados personalizados em PDF.
+Imagens	Pillow	Processamento e gestão de imagens de perfil.
+Frontend	HTML5 / CSS3 / JavaScript	Estrutura e interatividade.
+Design	Bootstrap 5	Layout, responsividade, modais, e componentes de navegação.
+Estilo	Montserrat / Gacor (Custom)	Tipografia moderna e elegante.
 ````
 
 ## principais funcionalidades
@@ -82,22 +83,51 @@ aplicação: http://127.0.0.1:8000/
 
 painel admin: http://127.0.0.1:8000/admin/
 
+painel aluno: http://127.0.0.1:8000/aluno/
+
+painel professor: http://127.0.0.1:8000/professor/
+
+(precisa sair pra mudar o tipo de login)
+
 ## fluxo de utilização (primeiros passos)
 
 para o "caminho feliz" funcionar, o admin precisa configurar o sistema primeiro:
 
-1. aceda a http://127.0.0.1:8000/admin/ com o superutilizador.
+Para testar todas as funcionalidades, siga este caminho:
 
-2. crie as salas: vá em "salas" -> "add sala" e crie algumas (ex: "sala 101", "lab 203").
+Ajuste Fino no Admin:
 
-3.  crie um professor: vá em "users" -> "add user". crie um utilizador (ex: "prof_teste"). salve. clique nele, vá até "perfis" e defina o "role" como "professor". salve novamente.
+Acesse o Painel Admin e vá em Users.
 
-4. saia do admin (/admin/logout/).
+Edite seu superusuário e vá em Perfís para preencher seu nome e sobrenome (ou eles aparecerão vazios na tela de perfil!).
 
-5. aceda à página de cadastro (http://127.0.0.1:8000/register/).
+Criação de Salas e Agenda:
 
-6. crie um novo utilizador (ex: "aluno_teste") e defina o "role" como "aluno".
+Vá em Core > Salas e crie algumas salas (Ex: Sala 101, Lab 203).
 
-o sistema fará o login automaticamente.
+Vá em Core > Disponibilidade Salas e crie horários livres para essas salas.
 
+Cadastro de Professores:
+
+Crie um Professor no Admin, vá em Perfís e defina o Role como professor.
+
+Teste de Criação de Curso:
+
+Saia do Admin. Faça login como o Professor.
+
+Vá em Área do Professor e na aba Cadastrar Novo Curso, crie um curso (preencha a Carga Horária e selecione um horário livre).
+
+Teste de Certificado e Graduação:
+
+Saia. Crie um Aluno pelo /register/.
+
+Faça login como Aluno.
+
+Vá em Meus Cursos e se matricule no curso criado.
+
+Faça login novamente como Professor.
+
+Clique no curso ministrado e, na seção Alunos Matriculados, clique em Aprovar ao lado do aluno.
+
+Faça login novamente como Aluno. O curso estará em Cursos Finalizados com o botão Baixar Certificado ativo.
 teste o fluxo: logue como professor, crie um curso. logue como aluno, matricule-se no curso.
