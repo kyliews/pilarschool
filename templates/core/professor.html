@@ -6,10 +6,9 @@
 {% block content %}
 <div class="text-center">
     <h1 class="page-title">Área do Professor</h1>
-    <p class="lead">Gira seus cursos e cadastre novos.</p>
+    <p class="lead">Gerencie seus cursos e cadastre novos.</p>
 </div>
 
-<!-- Abas de Navegação (Tabs) -->
 <ul class="nav nav-tabs mt-5" id="professorTabs" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link active" id="ministrados-tab" data-bs-toggle="tab" data-bs-target="#ministrados" type="button" role="tab" aria-controls="ministrados" aria-selected="true">
@@ -23,12 +22,8 @@
     </li>
 </ul>
 
-<!-- Conteúdo das Abas -->
 <div class="tab-content" id="professorTabsContent">
     
-    <!-- 
-      Aba 1: Cursos Ministrados 
-    -->
     <div class="tab-pane fade show active" id="ministrados" role="tabpanel" aria-labelledby="ministrados-tab">
         <div class="p-4 bg-white rounded-bottom border border-top-0">
             {% if not cursos_ministrados %}
@@ -36,13 +31,17 @@
             {% else %}
                 <div class="course-grid">
                     {% for curso in cursos_ministrados %}
-                        <!-- O Card que abre o Modal -->
                         <div class="course-card" data-bs-toggle="modal" data-bs-target="#modal-curso-prof-{{ curso.id }}">
                             <h4>{{ curso.nome_curso }}</h4>
-                            <p>Sala: {{ curso.sala.nome_sala }}</o>
+                            <p class="text-muted">
+                                {% if curso.agenda %}
+                                    Sala: {{ curso.agenda.sala.nome_sala }}
+                                {% else %}
+                                    Sem sala definida
+                                {% endif %}
+                            </p>
                         </div>
 
-                        <!-- O Modal (Pop-up) Escondido -->
                         <div class="modal fade" id="modal-curso-prof-{{ curso.id }}" tabindex="-1" aria-labelledby="modalLabelProf{{ curso.id }}" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
@@ -51,9 +50,15 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
+                                        
                                         <div class="modal-info-bar">
-                                            <span><strong>SALA:</strong> {{ curso.sala.nome_sala|default:"A definir" }}</span>
-                                            <span><strong>BLOCO:</strong> {{ curso.sala.bloco|default:"A definir" }}</span>
+                                            {% if curso.agenda %}
+                                                <span><strong>SALA:</strong> {{ curso.agenda.sala.nome_sala }}</span>
+                                                <span><strong>BLOCO:</strong> {{ curso.agenda.sala.bloco }}</span>
+                                                <span><strong>HORÁRIO:</strong> {{ curso.agenda.dias_horarios }}</span>
+                                            {% else %}
+                                                <span>Local a definir</span>
+                                            {% endif %}
                                         </div>
                                         
                                         <div class="modal-section">
@@ -62,23 +67,68 @@
                                         </div>
 
                                         <div class="modal-section">
-                                            <h5>Notas dos Alunos (Pendente)</h5>
-                                            <p>A funcionalidade de ver notas (como no mockup) ainda precisa ser implementada no back-end.</p>
+                                            <h5>Link da Aula Online</h5>
+                                            {% if curso.agenda and curso.agenda.link_aula %}
+                                                <a href="{{ curso.agenda.link_aula }}" target="_blank">{{ curso.agenda.link_aula }}</a>
+                                            {% else %}
+                                                <p class="text-muted">Nenhum link cadastrado.</p>
+                                            {% endif %}
                                         </div>
 
                                         <div class="modal-section">
-                                            <h5>Materiais de Aula</h5>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="mb-0">Materiais de Aula</h5>
+                                                <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMaterial{{ curso.id }}">
+                                                    ➕ Novo Material
+                                                </button>
+                                            </div>
+
+                                            <div class="collapse mb-3" id="collapseMaterial{{ curso.id }}">
+                                                <div class="card card-body bg-light border-0">
+                                                    <h6 class="text-success">Adicionar Material</h6>
+                                                    <form action="{% url 'adicionar_material' curso.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        
+                                                        <div class="mb-2">
+                                                            <label class="small fw-bold">Nome do Material</label>
+                                                            {{ form_material.nome_material }}
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="small fw-bold">Tipo (PDF, Vídeo...)</label>
+                                                                {{ form_material.tipo }}
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <label class="small fw-bold">URL</label>
+                                                                {{ form_material.url }}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="text-end">
+                                                            <button type="submit" class="btn btn-success btn-sm">Salvar Material</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                             <div class="material-grid">
                                                 {% for material in curso.materiais.all %}
-                                                    <a href="{{ material.url }}" target="_blank" class="material-item text-decoration-none">
-                                                        {{ material.nome_material|default:"PDF 1" }}
-                                                    </a>
+                                                    <div class="d-flex align-items-center justify-content-between border p-2 rounded mb-2 bg-white">
+                                                        <a href="{{ material.url }}" target="_blank" class="text-decoration-none text-dark d-flex align-items-center gap-2">
+                                                            <span class="fs-4">📄</span>
+                                                            <div>
+                                                                <span class="d-block fw-bold">{{ material.nome_material }}</span>
+                                                                <small class="text-muted">{{ material.tipo }}</small>
+                                                            </div>
+                                                        </a>
+                                                    </div>
                                                 {% empty %}
-                                                    <p>Nenhum material cadastrado.</p>
+                                                    <p class="text-muted text-center w-100">Nenhum material cadastrado.</p>
                                                 {% endfor %}
                                             </div>
-                                            <button class="btn btn-outline-primary mt-3 disabled">Adicionar Material (Pendente)</button>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -89,32 +139,44 @@
         </div>
     </div>
 
-    <!-- 
-      Aba 2: Cadastrar Novo Curso
-    -->
     <div class="tab-pane fade" id="cadastrar" role="tabpanel" aria-labelledby="cadastrar-tab">
         <div class="p-4 bg-white rounded-bottom border border-top-0">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <h4>Preencha os dados do novo curso</h4>
                     <form method="POST">
                         {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="{{ form_cadastrar_curso.nome_curso.id_for_label }}" class="form-label">Nome do Curso</label>
-                            {{ form_cadastrar_curso.nome_curso }}
+                        <div class="card mb-4 border-0 shadow-sm bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary mb-3"> Dados do Curso</h5>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nome do Curso</label>
+                                    {{ form_cadastrar_curso.nome_curso }}
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Descrição (Ementa)</label>
+                                    {{ form_cadastrar_curso.descricao }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="{{ form_cadastrar_curso.descricao.id_for_label }}" class="form-label">Descrição (Ementa)</label>
-                            {{ form_cadastrar_curso.descricao }}
+                        <div class="card mb-4 border-0 shadow-sm bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title text-success mb-3"> Logística & Acesso</h5>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Onde será a aula?</label>
+                                    {{ form_cadastrar_curso.agenda_disponivel }}
+                                    <div class="form-text">Apenas salas/horários livres aparecem aqui.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Link da Aula Online</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"></span>
+                                        {{ form_cadastrar_curso.link_aula }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="{{ form_cadastrar_curso.sala.id_for_label }}" class="form-label">Sala</label>
-                            {{ form_cadastrar_curso.sala }}
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Cadastrar Curso</button>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold">Criar Curso e Reservar Sala</button>
                         </div>
                     </form>
                 </div>
@@ -122,5 +184,5 @@
         </div>
     </div>
 
-</div> <!-- Fim do Tab Content -->
+</div> 
 {% endblock %}
