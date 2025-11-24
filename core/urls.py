@@ -3,7 +3,8 @@ from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.home_view, name='home'),
+    path('', views.index_view, name='index'),
+    path('dashboard/', views.dashboard_view, name='home'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
@@ -17,8 +18,7 @@ urlpatterns = [
     path('professor/adicionar_material/<int:curso_id>/', views.adicionar_material_view, name='adicionar_material'),
 
     path('graduar-aluno/<int:matricula_id>/', views.graduar_aluno_view, name='graduar_aluno'),
-    
-    # Rota para baixar o PDF
+
     path('certificado/<int:curso_id>/', views.gerar_certificado_view, name='gerar_certificado'),
 
     path('matricular/<int:curso_id>/', views.matricular_aluno_view, name='matricular'),

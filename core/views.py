@@ -18,10 +18,11 @@ from .forms import (
     CustomUserCreationForm, MaterialAulaForm, ConfiguracoesForm
 )
 
-# Adicione este import no topo junto com os outros
 from django.core.files.storage import default_storage
 
-# --- FUNÇÃO AUXILIAR PARA O PDF ENCONTRAR ARQUIVOS ---
+def index_view(request):
+    return render(request, 'core/index.html')
+
 def link_callback(uri, rel):
     """
     Converte URLs HTML (como /static/...) em caminhos absolutos do sistema
@@ -30,28 +31,23 @@ def link_callback(uri, rel):
     sUrl = settings.STATIC_URL      
     mUrl = settings.MEDIA_URL      
 
-    # 1. Trata arquivos STATIC (Fontes, Logos)
     if uri.startswith(sUrl):
         relative_path = uri.replace(sUrl, '')
-        
-        # Encontra o caminho ABSOLUTO do arquivo usando o finders
+
         path = finders.find(relative_path)
         
         if path:
             if isinstance(path, (list, tuple)):
                 path = path[0]
-            
-            # Garante que o caminho retornado está dentro do projeto e existe
+
             if os.path.exists(path):
                 return path
-        
-        # Fallback se o finders falhar (usa o primeiro STATICFILES_DIRS)
+
         elif settings.STATICFILES_DIRS:
             path = os.path.join(settings.STATICFILES_DIRS[0], relative_path)
             if os.path.exists(path):
                 return path
-            
-    # 2. Trata arquivos MEDIA (Uploads)
+
     elif uri.startswith(mUrl):
         path = os.path.join(settings.MEDIA_ROOT, uri.replace(mUrl, ""))
         if os.path.exists(path):
@@ -103,7 +99,7 @@ def logout_view(request):
     return redirect('login')
 
 @login_required
-def home_view(request):
+def dashboard_view(request):
     if request.user.is_superuser: return redirect('/admin/')
     try:
         role = request.user.profile.role
@@ -118,8 +114,7 @@ def aluno_view(request):
         return redirect('home')
     aluno = request.user
     total_cursos_sistema = Curso.objects.count()
-    
-    # Lógica de cursos
+
     cursos_matriculados_ids = Matricula.objects.filter(aluno=aluno).values_list('curso__id', flat=True)
     cursos_disponiveis = Curso.objects.exclude(id__in=cursos_matriculados_ids)
     
@@ -216,19 +211,15 @@ def deletar_conta_view(request):
         return redirect('login')
     return redirect('configuracoes')
 
-# --- NOVAS VIEWS DO CERTIFICADO E GRADUAÇÃO ---
 
 @login_required
 def graduar_aluno_view(request, matricula_id):
-    # Busca a matrícula específica
     matricula = get_object_or_404(Matricula, id=matricula_id)
-    
-    # SEGURANÇA: Só o professor do curso ou um Admin pode fazer isso
+
     if request.user != matricula.curso.professor and not request.user.is_superuser:
         messages.error(request, "Apenas o professor responsável pode concluir este curso.")
         return redirect('home')
-    
-    # Atualiza o status
+
     matricula.status = 'finalizado'
     matricula.data_conclusao = timezone.now().date()
     matricula.save()
@@ -238,10 +229,8 @@ def graduar_aluno_view(request, matricula_id):
 
 @login_required
 def gerar_certificado_view(request, curso_id):
-    # Pega a matrícula finalizada
     matricula = get_object_or_404(Matricula, aluno=request.user, curso_id=curso_id, status='finalizado')
-    
-    # O ReportLab já conhece a fonte Gacor graças ao apps.py
+
     context = {
         'aluno': matricula.aluno.first_name + " " + matricula.aluno.last_name,
         'curso': matricula.curso.nome_curso,
@@ -258,8 +247,7 @@ def gerar_certificado_view(request, curso_id):
     
     template = get_template(template_path)
     html = template.render(context)
-    
-    # Chama o PISA com o link_callback
+
     pisa_status = pisa.CreatePDF(
         html, dest=response, link_callback=link_callback
     )

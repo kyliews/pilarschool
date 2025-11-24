@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Início - Conecta Pilar{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center align-items-center text-center mb-5 mt-3">
+    <div class="col-lg-8">
+        <h1 class="display-3 fw-bold text-white mb-3" style="text-shadow: 0 0 20px rgba(0, 255, 182, 0.5);">
+            CONECTA <span class="text-brand">PILAR</span>
+        </h1>
+        <p class="lead text-white mb-4">
+            Um elo entre conhecimento, comunidade e futuro.
+        </p>
+        
+        {% if not user.is_authenticated %}
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-5">Acessar Plataforma</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-5" style="border-radius: 30px;">Criar Conta</a>
+            </div>
+        {% else %}
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Ir para Minha Área</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow p-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="text-brand mb-4">Quem Somos?</h2>
+                    <p class="text-white" style="font-size: 1.1rem; line-height: 1.8;">
+                        A <strong>Conecta Pilar</strong> é uma iniciativa que aproxima estudantes da <strong>CESAR School</strong> e a comunidade do <strong>Pilar</strong> por meio de aulas presenciais e online. 
+                    </p>
+                    <p class="text-white" style="font-size: 1.1rem; line-height: 1.8;">
+                        Nosso propósito é criar oportunidades de aprendizado acessível, conectando quem quer ensinar a quem deseja aprender.
+                        Oferecemos reforço escolar, inglês e habilidades digitais, ajudando jovens e adultos a melhorarem seu desempenho acadêmico.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <i class="ri-community-line" style="font-size: 10rem; color: rgba(255,255,255,0.1);"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card border-0 p-5 text-center" style="background: linear-gradient(45deg, rgba(0, 255, 182, 0.1), rgba(0, 134, 255, 0.1)) !important;">
+            <h3 class="text-white mb-3">ODS Prioritários</h3>
+            <p class="text-white fs-5">
+                A visão ESG do CESAR é transformar organizações e a vida das pessoas, resolvendo problemas sistêmicos da sociedade.
+            </p>
+            <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
+                <div class="p-3 border rounded border-light" style="background: rgba(255,255,255,0.05); width: 120px;">
+                    <i class="ri-book-open-line fs-2 text-brand"></i>
+                    <p class="mb-0 mt-2 small">Educação de Qualidade</p>
+                </div>
+                <div class="p-3 border rounded border-light" style="background: rgba(255,255,255,0.05); width: 120px;">
+                    <i class="ri-group-line fs-2 text-brand"></i>
+                    <p class="mb-0 mt-2 small">Redução de Desigualdades</p>
+                </div>
+                <div class="p-3 border rounded border-light" style="background: rgba(255,255,255,0.05); width: 120px;">
+                    <i class="ri-shake-hands-line fs-2 text-brand"></i>
+                    <p class="mb-0 mt-2 small">Parcerias</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5">
+    <div class="col-md-6 mb-3">
+        <a href="#" target="_blank" class="text-decoration-none">
+            <div class="card p-4 text-center hover-effect h-100">
+                <i class="ri-global-line fs-1 text-brand mb-3"></i>
+                <h4 class="text-white">Site Oficial</h4>
+                <p class="text-muted">Conecta Pilar</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6 mb-3">
+        <a href="#" target="_blank" class="text-decoration-none">
+            <div class="card p-4 text-center hover-effect h-100">
+                <i class="ri-team-line fs-1 text-brand mb-3"></i>
+                <h4 class="text-white">Equipe</h4>
+                <p class="text-muted">Conecta Pilar - Equipe</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Efeito de hover nos cards de links */
+    .hover-effect {
+        transition: transform 0.3s, border-color 0.3s;
+    }
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        border-color: var(--color-green) !important;
+    }
+</style>
+
+{% endblock %}
