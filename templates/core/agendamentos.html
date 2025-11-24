@@ -1,49 +1,94 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Minhas Aulas - Conecta Pilar{% endblock %}
+{% block title %}Quadro de Horários - Conecta Pilar{% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1 class="page-title">Minhas Aulas</h1>
-    <p class="lead">Confira seus horários e acesse os links das aulas.</p>
+<div class="text-center mt-4">
+    <h1 class="page-title">Quadro de Horários</h1>
+    <p class="lead">
+        {% if is_professor %}
+            Confira suas aulas ministradas e acesse os links.
+        {% else %}
+            Confira seus horários e acesse os links das aulas.
+        {% endif %}
+    </p>
 </div>
 
-<div class="p-4 border- rounded-3 border mt-5">
-    <h3 class="mb-4 text-center">Quadro de Horários</h3>
-    
-    {% if not minhas_aulas %}
-        <div class="alert alert-info text-center">
-            Você ainda não está matriculado em cursos com agendamento definido.
-        </div>
-    {% else %}
-        <div class="course-grid">
-            {% for matricula in minhas_aulas %}
-                {% if matricula.curso.agenda %}
-                    <div class="course-card">
-                        <h4 class="text-primary">{{ matricula.curso.nome_curso }}</h4>
-                        
-                        <p class="text-muted mb-1">
-                            <strong>Sala:</strong> {{ matricula.curso.agenda.sala.nome_sala }} - Bloco {{ matricula.curso.agenda.sala.bloco }}
-                        </p>
-                        <hr>
-                        
-                        <p><strong>Datas:</strong> {{ matricula.curso.agenda.data_inicio|date:"d/m" }} a {{ matricula.curso.agenda.data_fim|date:"d/m" }}</p>
-                        <p><strong>Horário:</strong> {{ matricula.curso.agenda.dias_horarios }}</p>
-                        
-                        {% if matricula.curso.agenda.link_aula %}
-                            <a href="{{ matricula.curso.agenda.link_aula }}" target="_blank" class="btn btn-success mt-3 w-100 fw-bold">
-                                 Acessar Aula Agora
-                            </a>
-                        {% else %}
-                            <button class="btn btn-secondary mt-3 w-100" disabled>
-                                Link não disponível
-                            </button>
+<div class="container mt-5">
+    <div class="p-4 border rounded-3 border">
+        <h3 class="mb-4 text-center">
+            {% if is_professor %}Minhas Aulas (Professor){% else %}Minhas Aulas (Aluno){% endif %}
+        </h3>
+        
+        {% if is_professor %}
+            {% if not meus_cursos %}
+                <div class="alert alert-info text-center">
+                    Você ainda não cadastrou cursos com agendamento.
+                </div>
+            {% else %}
+                <div class="course-grid">
+                    {% for curso in meus_cursos %}
+                        {% if curso.agenda %}
+                            <div class="course-card">
+                                <h4>{{ curso.nome_curso }}</h4>
+                                
+                                <p class="text-muted mb-1">
+                                    <strong>Sala:</strong> {{ curso.agenda.sala.nome_sala }}
+                                </p>
+                                <hr>
+                                
+                                <p><strong>Horário:</strong> {{ curso.agenda.dias_horarios }}</p>
+                                
+                                {% if curso.agenda.link_aula %}
+                                    <a href="{{ curso.agenda.link_aula }}" target="_blank" class="btn btn-success mt-3 w-100 fw-bold">
+                                        📹 Iniciar Aula (Link)
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-secondary mt-3 w-100" disabled>
+                                        Link não definido
+                                    </button>
+                                {% endif %}
+                            </div>
                         {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        {% else %}
+            {% if not minhas_aulas %}
+                <div class="alert alert-info text-center">
+                    Você ainda não está matriculado em cursos com agendamento definido.
+                </div>
+            {% else %}
+                <div class="course-grid">
+                    {% for matricula in minhas_aulas %}
+                        {% if matricula.curso.agenda %}
+                            <div class="course-card">
+                                <h4>{{ matricula.curso.nome_curso }}</h4>
+                                
+                                <p class="text-muted mb-1">
+                                    <strong>Sala:</strong> {{ matricula.curso.agenda.sala.nome_sala }}
+                                </p>
+                                <hr>
+                                
+                                <p><strong>Horário:</strong> {{ matricula.curso.agenda.dias_horarios }}</p>
+                                
+                                {% if matricula.curso.agenda.link_aula %}
+                                    <a href="{{ matricula.curso.agenda.link_aula }}" target="_blank" class="btn btn-success mt-3 w-100 fw-bold">
+                                         Acessar Aula
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-secondary mt-3 w-100" disabled>
+                                        Link não disponível
+                                    </button>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

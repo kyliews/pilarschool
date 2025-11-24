@@ -24,25 +24,18 @@ def index_view(request):
     return render(request, 'core/index.html')
 
 def link_callback(uri, rel):
-    """
-    Converte URLs HTML (como /static/...) em caminhos absolutos do sistema
-    de arquivos (para o xhtml2pdf).
-    """
     sUrl = settings.STATIC_URL      
     mUrl = settings.MEDIA_URL      
 
     if uri.startswith(sUrl):
         relative_path = uri.replace(sUrl, '')
-
         path = finders.find(relative_path)
         
         if path:
             if isinstance(path, (list, tuple)):
                 path = path[0]
-
             if os.path.exists(path):
                 return path
-
         elif settings.STATICFILES_DIRS:
             path = os.path.join(settings.STATICFILES_DIRS[0], relative_path)
             if os.path.exists(path):
@@ -172,10 +165,28 @@ def adicionar_material_view(request, curso_id):
 
 @login_required
 def agendamentos_view(request):
-    if request.user.profile.role != 'aluno':
+    role = request.user.profile.role
+    
+    context = {}
+    
+    if role == 'aluno':
+        minhas_aulas = Matricula.objects.filter(
+            aluno=request.user, 
+            status='em_andamento'
+        ).select_related('curso', 'curso__agenda', 'curso__agenda__sala')
+        context['minhas_aulas'] = minhas_aulas
+        context['is_professor'] = False
+        
+    elif role == 'professor':
+        meus_cursos = Curso.objects.filter(
+            professor=request.user
+        ).select_related('agenda', 'agenda__sala')
+        context['meus_cursos'] = meus_cursos
+        context['is_professor'] = True
+        
+    else:
         return redirect('home')
-    minhas_aulas = Matricula.objects.filter(aluno=request.user, status='em_andamento').select_related('curso', 'curso__agenda', 'curso__agenda__sala')
-    context = {'minhas_aulas': minhas_aulas}
+    
     return render(request, 'core/agendamentos.html', context)
 
 @login_required
@@ -210,7 +221,6 @@ def deletar_conta_view(request):
         messages.info(request, "Sua conta foi excluída com sucesso.")
         return redirect('login')
     return redirect('configuracoes')
-
 
 @login_required
 def graduar_aluno_view(request, matricula_id):
