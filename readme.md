@@ -34,11 +34,11 @@ cd pilarschool
 ## 2. Crie e ative o ambiente virtual
 
 **Windows:**
-python -m venv .venv
+python -m venv .venv <d>
 .\.venv\Scripts\activate
 
 **Mac/Linux:**
-python -m venv .venv
+python -m venv .venv <d>
 source .venv/bin/activate
 
 ## 3. Instale as dependências
@@ -137,6 +137,8 @@ Para testar o ciclo completo da aplicação manualmente (sem os dados pre defini
 * Gestão total de usuários e permissões.
 
 ---
+
+
 
 ```
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
