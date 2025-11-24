@@ -164,6 +164,22 @@ def adicionar_material_view(request, curso_id):
     return redirect('professor')
 
 @login_required
+def editar_link_aula_view(request, curso_id):
+    curso = get_object_or_404(Curso, id=curso_id, professor=request.user)
+    
+    if request.method == 'POST':
+        novo_link = request.POST.get('link_aula')
+
+        if curso.agenda:
+            curso.agenda.link_aula = novo_link
+            curso.agenda.save()
+            messages.success(request, "Link da aula atualizado com sucesso!")
+        else:
+            messages.error(request, "Este curso não tem uma sala/agenda definida para salvar o link.")
+            
+    return redirect('professor')
+
+@login_required
 def agendamentos_view(request):
     role = request.user.profile.role
     

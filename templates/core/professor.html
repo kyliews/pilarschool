@@ -125,11 +125,33 @@
                 </div>
 
                 <div class="modal-section">
-                    <h5>Link da Aula Online</h5>
-                    {% if curso.agenda and curso.agenda.link_aula %}
-                        <a href="{{ curso.agenda.link_aula }}" target="_blank">{{ curso.agenda.link_aula }}</a>
-                    {% else %}
-                        <p class="text-muted">Nenhum link cadastrado.</p>
+                    <h5 class="mb-2">Link da Aula Online</h5>
+                    
+                    <form action="{% url 'editar_link_aula' curso.id %}" method="POST" class="mt-2">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-success">
+                                <i class="ri-link"></i>
+                            </span>
+                            <input type="url" name="link_aula" class="form-control" 
+                                   placeholder="Cole o link do Meet/Zoom aqui" 
+                                   value="{{ curso.agenda.link_aula|default:'' }}">
+                            
+                            <button type="submit" class="btn btn-primary">
+                                Salvar
+                            </button>
+                        </div>
+                        <div class="form-text text-white-50 mt-1" style="font-size: 0.8rem;">
+                            Alterar este link atualizará automaticamente o acesso dos alunos.
+                        </div>
+                    </form>
+                    
+                    {% if curso.agenda.link_aula %}
+                        <div class="mt-2 text-end">
+                            <a href="{{ curso.agenda.link_aula }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                <i class="ri-external-link-line"></i> Testar Link
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
 
