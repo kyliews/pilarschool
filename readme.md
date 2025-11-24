@@ -32,14 +32,15 @@ git clone [https://github.com/kyliews/pilarschool.git](https://github.com/kyliew
 cd pilarschool
 
 ## 2. Crie e ative o ambiente virtual
-
-**Windows:**
-python -m venv .venv <d>
+```
+Windows:
+python -m venv .venv 
 .\.venv\Scripts\activate
 
-**Mac/Linux:**
-python -m venv .venv <d>
+Mac/Linux:
+python -m venv .venv
 source .venv/bin/activate
+```
 
 ## 3. Instale as dependências
 pip install -r requirements.txt
