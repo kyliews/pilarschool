@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from .models import Profile, Curso, DisponibilidadeSala, MaterialAula
 
-# Lista de Estados do Brasil
 ESTADOS_BR = [
     ('', 'Selecione o Estado...'),
     ('AC', 'Acre'), ('AL', 'Alagoas'), ('AP', 'Amapá'), ('AM', 'Amazonas'),
@@ -30,7 +29,6 @@ class UserUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Bloqueia Nome e Sobrenome para todos (apenas Admin muda)
         self.fields['first_name'].disabled = True
         self.fields['last_name'].disabled = True
 
@@ -45,9 +43,7 @@ class ProfileUpdateForm(forms.ModelForm):
         widgets = {
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Fale sobre sua experiência...'}),
             'foto': forms.FileInput(attrs={'class': 'form-control'}),
-            
-            # --- CORREÇÃO AQUI ---
-            # Adicionamos format='%Y-%m-%d' para o navegador entender
+
             'data_nascimento': forms.DateInput(
                 attrs={'class': 'form-control', 'type': 'date'},
                 format='%Y-%m-%d' 
@@ -90,8 +86,7 @@ class CursoForm(forms.ModelForm):
         widgets = {
             'nome_curso': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Introdução ao Python'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            
-            # Widget bonito para número
+
             'carga_horaria': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
         }
 
@@ -123,8 +118,7 @@ class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, required=True, label="Nome", widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(max_length=100, required=False, label="Apelido", widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(required=True, label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    
-    # NOVA CAMPO OBRIGATÓRIO NO CADASTRO
+
     data_nascimento = forms.DateField(
         required=True, 
         label="Data de Nascimento",
@@ -153,10 +147,8 @@ class CustomUserCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
         user.save()
-        
-        # SALVA OS DADOS NO PERFIL
+
         user.profile.role = self.cleaned_data['role']
-        # Salva a data de nascimento digitada no cadastro
         user.profile.data_nascimento = self.cleaned_data['data_nascimento']
         user.profile.save()
         return user
@@ -166,7 +158,6 @@ class ConfiguracoesForm(forms.ModelForm):
         model = Profile
         fields = ['receber_notificacoes', 'perfil_publico', 'modo_alto_contraste']
         widgets = {
-            # A classe 'form-check-input' com role='switch' ativa o visual de interruptor do Bootstrap
             'receber_notificacoes': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
             'perfil_publico': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
             'modo_alto_contraste': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),

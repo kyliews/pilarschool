@@ -13,8 +13,7 @@ class Profile(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='', blank=True)
-    
-    # --- DADOS PESSOAIS ---
+
     bio = models.TextField(blank=True, null=True, verbose_name="Biografia / Resumo Profissional")
     foto = models.ImageField(upload_to='perfil/', blank=True, null=True, default='perfil/default.png')
     data_nascimento = models.DateField(null=True, blank=True, verbose_name="Data de Nascimento")
@@ -22,12 +21,10 @@ class Profile(models.Model):
     cidade = models.CharField(max_length=100, blank=True, null=True)
     estado = models.CharField(max_length=50, blank=True, null=True)
 
-    # --- LINKS ---
     linkedin = models.URLField(max_length=200, blank=True, null=True, verbose_name="Perfil LinkedIn")
     github = models.URLField(max_length=200, blank=True, null=True, verbose_name="Perfil GitHub")
     portfolio = models.URLField(max_length=200, blank=True, null=True, verbose_name="Portfólio / Site Pessoal")
 
-    # --- PROFISSIONAL ---
     MOMENTO_CHOICES = (
         ('estudante', 'Estudante - Buscando estágio'),
         ('junior', 'Júnior - Buscando evolução'),
@@ -47,11 +44,9 @@ class Profile(models.Model):
     modalidade_trabalho = models.CharField(max_length=20, choices=MODALIDADE_CHOICES, default='remoto', blank=True)
     
     pretensao_salarial = models.CharField(max_length=50, blank=True, null=True, verbose_name="Pretensão Salarial (R$)")
-    
-    # Habilidades (Ex: Java, Python, Django)
+
     tecnologias = models.CharField(max_length=255, blank=True, null=True, verbose_name="Principais Tecnologias (separadas por vírgula)")
-    
-    # --- CONFIGURAÇÕES E PREFERÊNCIAS ---
+
     receber_notificacoes = models.BooleanField(default=True, verbose_name="Receber novidades e avisos por e-mail")
     perfil_publico = models.BooleanField(default=True, verbose_name="Perfil visível para outros alunos")
     modo_alto_contraste = models.BooleanField(default=False, verbose_name="Modo de Alto Contraste (Acessibilidade)")
