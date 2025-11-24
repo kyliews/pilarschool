@@ -26,7 +26,6 @@ body {
     min-height: 100vh;
 }
 
-/* Textos Brancos */
 h1, h2, h3, h4, h5, h6, p, span, div, label, small, .form-text, 
 .text-muted, .lead, .alert, .nav-link, .dropdown-item, .modal-title, 
 .modal-body, .course-card p, .course-card small, .material-item {
@@ -40,7 +39,6 @@ h1, h2, h3, h4, h5, h6, p, span, div, label, small, .form-text,
     background-clip: text;
 }
 
-/* Vidro Geral (Cards, Modais, Abas) */
 .bg-white, .bg-light, .p-4, .card, .login-card, .modal-content, .rounded-bottom {
     background-color: var(--glass-card) !important;
     backdrop-filter: blur(16px);
@@ -51,15 +49,13 @@ h1, h2, h3, h4, h5, h6, p, span, div, label, small, .form-text,
     color: white !important;
 }
 
-/* Correção de Bordas das Abas */
 .border-top-0 {
     border-top: none !important;
-    border-top-left-radius: 0 !important; /* Zera a curva superior */
-    border-top-right-radius: 0 !important; /* Zera a curva superior */
-    border-radius: 0 0 15px 15px; /* Curva apenas embaixo */
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-radius: 0 0 15px 15px;
 }
 
-/* Navbar */
 .navbar {
     background: rgba(0, 0, 0, 0.85) !important;
     backdrop-filter: blur(15px);
@@ -81,7 +77,6 @@ h1, h2, h3, h4, h5, h6, p, span, div, label, small, .form-text,
     color: white !important;
 }
 
-/* Inputs e Formulários */
 .form-control, .form-select, input[type="text"], input[type="password"], input[type="email"] {
     background-color: rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -117,7 +112,6 @@ input:disabled, input[readonly], .form-control:disabled, .form-control[readonly]
     margin-bottom: 0.5rem;
 }
 
-/* Switches */
 .form-check-input {
     background-color: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.4);
@@ -132,19 +126,16 @@ input:disabled, input[readonly], .form-control:disabled, .form-control[readonly]
     box-shadow: 0 0 10px rgba(0, 255, 182, 0.5);
 }
 
-/* Select Options (Preto) */
 select option {
     background-color: #0f172a;
     color: white;
 }
 
-/* Autofill Chrome */
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.6) inset !important;
     -webkit-text-fill-color: white !important;
 }
 
-/* Date Picker Dark */
 input[type="date"] {
     color-scheme: dark;
     position: relative;
@@ -160,7 +151,6 @@ input[type="date"]::-webkit-datetime-edit {
     color: white;
 }
 
-/* Botões */
 .btn-primary {
     background: var(--gradient-brand);
     border: none;
@@ -182,7 +172,6 @@ input[type="date"]::-webkit-datetime-edit {
     font-weight: 700;
 }
 
-/* Login */
 .login-card {
     max-width: 450px;
     margin: 2rem auto;
@@ -196,7 +185,6 @@ input[type="date"]::-webkit-datetime-edit {
     margin-bottom: 1rem;
 }
 
-/* Grid de Cursos */
 .course-grid {
     display: flex !important;
     flex-wrap: wrap;
@@ -252,7 +240,6 @@ input[type="date"]::-webkit-datetime-edit {
     width: 100%;
 }
 
-/* Abas */
 .nav-tabs {
     border-bottom: 1px solid var(--glass-border);
     justify-content: center !important;
@@ -283,7 +270,6 @@ input[type="date"]::-webkit-datetime-edit {
     margin-top: 0 !important;
 }
 
-/* Alertas */
 .alert {
     background-color: rgba(0, 0, 0, 0.6) !important;
     border: 1px solid var(--glass-border);
@@ -300,7 +286,6 @@ input[type="date"]::-webkit-datetime-edit {
     filter: invert(1);
 }
 
-/* Modais */
 .modal-dialog {
     max-width: 95% !important;
     margin: 2rem auto;
@@ -353,7 +338,6 @@ input[type="date"]::-webkit-datetime-edit {
     margin-bottom: 1rem;
 }
 
-/* Grid de Materiais (Modais) */
 .material-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -368,7 +352,7 @@ input[type="date"]::-webkit-datetime-edit {
     transition: all 0.3s ease;
     text-align: center;
     display: block;
-    color: white !important; /* Força texto branco */
+    color: white !important;
 }
 
 .material-item:hover {
@@ -377,7 +361,6 @@ input[type="date"]::-webkit-datetime-edit {
     transform: translateY(-2px);
 }
 
-/* Dropdown Menu */
 .dropdown-menu {
     background-color: rgba(15, 23, 42, 0.95) !important;
     backdrop-filter: blur(20px);
@@ -420,7 +403,6 @@ input[type="date"]::-webkit-datetime-edit {
     background-color: #DC2626 !important;
 }
 
-/* Botão Acessibilidade */
 .accessibility-fab {
     position: fixed;
     left: 20px;
@@ -461,7 +443,6 @@ input[type="date"]::-webkit-datetime-edit {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Alto Contraste */
 body.high-contrast {
     filter: contrast(120%) brightness(110%) saturate(120%);
     background-color: #000 !important;
@@ -479,7 +460,6 @@ body.high-contrast input {
     border: 2px solid #fff !important;
 }
 
-/* Utilitários */
 .text-center, .page-title {
     text-align: center !important;
     display: block;
@@ -490,6 +470,47 @@ body.high-contrast input {
     font-weight: 800;
     margin-bottom: 1rem;
     text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.lead {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+a {
+    text-decoration: none;
+}
+
+.card-white-exception {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #000000 !important;
+    backdrop-filter: blur(0.1px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.card-white-exception h2,
+.card-white-exception p,
+.card-white-exception strong {
+    color: #000000 !important;
+}
+
+.profile-img-home {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: cover;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.page-title {
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    text-align: center;
 }
 
 .lead {

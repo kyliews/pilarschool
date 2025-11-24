@@ -5,13 +5,13 @@
 
 {% block content %}
 
-<div class="row justify-content-center align-items-center text-center mb-5 mt-3">
-    <div class="col-lg-8">
+<div class="row d-flex justify-content-center align-items-center text-center mb-5 mt-5">
+    <div class="col-lg-10 d-flex flex-column align-items-center">
         <h1 class="display-3 fw-bold text-white mb-3" style="text-shadow: 0 0 20px rgba(0, 255, 182, 0.5);">
             CONECTA <span class="text-brand">PILAR</span>
         </h1>
-        <p class="lead text-white mb-4">
-            Um elo entre conhecimento, comunidade e futuro.
+        <p class="lead text-white mb-4" style="max-width: 600px;">
+            Um projeto institucional da Cesar School
         </p>
         
         {% if not user.is_authenticated %}
@@ -20,71 +20,76 @@
                 <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-5" style="border-radius: 30px;">Criar Conta</a>
             </div>
         {% else %}
-            <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Ir para Minha Área</a>
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Ir para Minha Área</a>
+            </div>
         {% endif %}
     </div>
 </div>
 
-<div class="row mb-5">
+<div class="row mb-5 justify-content-center">
     <div class="col-12">
-        <div class="card border-0 shadow p-5">
-            <div class="row align-items-center">
+        <div class="card border-0 shadow p-5 card-white-exception text-center">
+            <div class="row align-items-center justify-content-center">
                 <div class="col-md-6">
-                    <h2 class="text-brand mb-4">Quem Somos?</h2>
-                    <p class="text-white" style="font-size: 1.1rem; line-height: 1.8;">
+                    <h2 class="text-brand mb-4 fw-bold">Quem Somos?</h2>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
                         A <strong>Conecta Pilar</strong> é uma iniciativa que aproxima estudantes da <strong>CESAR School</strong> e a comunidade do <strong>Pilar</strong> por meio de aulas presenciais e online. 
                     </p>
-                    <p class="text-white" style="font-size: 1.1rem; line-height: 1.8;">
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
                         Nosso propósito é criar oportunidades de aprendizado acessível, conectando quem quer ensinar a quem deseja aprender.
                         Oferecemos reforço escolar, inglês e habilidades digitais, ajudando jovens e adultos a melhorarem seu desempenho acadêmico.
                     </p>
+                    <p class="mt-3 fw-bold">
+                        Mais que um projeto educacional, a Conecta Pilar é um elo entre conhecimento, comunidade e futuro.
+                    </p>
                 </div>
-                <div class="col-md-6 text-center">
-                    <i class="ri-community-line" style="font-size: 10rem; color: rgba(255,255,255,0.1);"></i>
+                <div class="col-md-6 text-center mt-4 mt-md-0">
+                    <img src="{% static 'images/01.png' %}" alt="Conecta Pilar Comunidade" class="profile-img-home">
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mb-5">
+<div class="row mb-5 justify-content-center">
     <div class="col-md-12">
         <div class="card border-0 p-5 text-center" style="background: linear-gradient(45deg, rgba(0, 255, 182, 0.1), rgba(0, 134, 255, 0.1)) !important;">
             <h3 class="text-white mb-3">ODS Prioritários</h3>
-            <p class="text-white fs-5">
+            <p class="text-white fs-5 mx-auto" style="max-width: 800px;">
                 A visão ESG do CESAR é transformar organizações e a vida das pessoas, resolvendo problemas sistêmicos da sociedade.
             </p>
             <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
-                <div class="p-3 border rounded border-light" style="background: rgba(255,255,255,0.05); width: 120px;">
-                    <i class="ri-book-open-line fs-2 text-brand"></i>
-                    <p class="mb-0 mt-2 small">Educação de Qualidade</p>
+                <div class="p-3 border rounded border-light d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); width: 140px; height: 140px;">
+                    <i class="ri-book-open-line fs-1 text-brand"></i>
+                    <p class="mb-0 mt-2 small fw-bold">Educação de Qualidade</p>
                 </div>
-                <div class="p-3 border rounded border-light" style="background: rgba(255,255,255,0.05); width: 120px;">
-                    <i class="ri-group-line fs-2 text-brand"></i>
-                    <p class="mb-0 mt-2 small">Redução de Desigualdades</p>
+                <div class="p-3 border rounded border-light d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); width: 140px; height: 140px;">
+                    <i class="ri-group-line fs-1 text-brand"></i>
+                    <p class="mb-0 mt-2 small fw-bold">Redução de Desigualdades</p>
                 </div>
-                <div class="p-3 border rounded border-light" style="background: rgba(255,255,255,0.05); width: 120px;">
-                    <i class="ri-shake-hands-line fs-2 text-brand"></i>
-                    <p class="mb-0 mt-2 small">Parcerias</p>
+                <div class="p-3 border rounded border-light d-flex flex-column align-items-center justify-content-center" style="background: rgba(255,255,255,0.05); width: 140px; height: 140px;">
+                    <i class="ri-shake-hands-line fs-1 text-brand"></i>
+                    <p class="mb-0 mt-2 small fw-bold">Parcerias</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mt-5 mb-5">
-    <div class="col-md-6 mb-3">
-        <a href="#" target="_blank" class="text-decoration-none">
-            <div class="card p-4 text-center hover-effect h-100">
+<div class="row mt-5 mb-5 justify-content-center">
+    <div class="col-md-5 mb-3">
+        <a href="https://sites.google.com/cesar.school/conectapilar/home?authuser=0" target="_blank" class="text-decoration-none">
+            <div class="card p-4 text-center hover-effect h-100 d-flex flex-column justify-content-center align-items-center">
                 <i class="ri-global-line fs-1 text-brand mb-3"></i>
                 <h4 class="text-white">Site Oficial</h4>
                 <p class="text-muted">Conecta Pilar</p>
             </div>
         </a>
     </div>
-    <div class="col-md-6 mb-3">
-        <a href="#" target="_blank" class="text-decoration-none">
-            <div class="card p-4 text-center hover-effect h-100">
+    <div class="col-md-5 mb-3">
+        <a href="https://sites.google.com/cesar.school/conectapilar/equipe?authuser=0" target="_blank" class="text-decoration-none">
+            <div class="card p-4 text-center hover-effect h-100 d-flex flex-column justify-content-center align-items-center">
                 <i class="ri-team-line fs-1 text-brand mb-3"></i>
                 <h4 class="text-white">Equipe</h4>
                 <p class="text-muted">Conecta Pilar - Equipe</p>
@@ -94,7 +99,6 @@
 </div>
 
 <style>
-    /* Efeito de hover nos cards de links */
     .hover-effect {
         transition: transform 0.3s, border-color 0.3s;
     }
