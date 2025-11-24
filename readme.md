@@ -27,10 +27,10 @@ Certifique-se de ter o **Python 3** instalado.
 
 ### 1. Clone o repositório
 No terminal, execute:
-
+```
 git clone [https://github.com/kyliews/pilarschool.git](https://github.com/kyliews/pilarschool.git)
 cd pilarschool
-
+```
 ## 2. Crie e ative o ambiente virtual
 ```
 Windows:
@@ -43,31 +43,37 @@ source .venv/bin/activate
 ```
 
 ## 3. Instale as dependências
+```
 pip install -r requirements.txt
-
+```
 ## 4. Crie o Banco de Dados (Migrações)
 Isso cria o arquivo db.sqlite3 e a estrutura das tabelas.
+```
 python manage.py migrate
-
+```
 ## 5.  CARREGAR DADOS DE TESTE (População do Banco)
 Para não começar com o sistema vazio, execute este script personalizado. Ele criará salas, cursos, materiais, 6 professores e 10 alunos automaticamente.
+```
 python manage.py popular_banco
-
+```
 ## 6. Crie um Superusuário (Admin)
 Necessário para acessar o painel administrativo (/admin).
+```
 python manage.py createsuperuser
+```
 (Siga os passos na tela para definir email e senha).
 
 ## 7. Execute o servidor
+```
 python manage.py runserver
-
+```
 ## 8. Acesse a aplicação
+```
 Aplicação: http://127.0.0.1:8000/
 Painel Admin: http://127.0.0.1:8000/admin/
-
+```
 ##  Credenciais de Teste (Geradas pelo Script)
 Se você rodou o comando popular_banco, use estas contas para testar:
-
 Senha padrão para todos: Senha123@
 
 ```
@@ -80,9 +86,10 @@ Aluno          aluno1 até aluno10
 Para testar o ciclo completo da aplicação manualmente (sem os dados pre definidos):
 
 ### Ajuste Fino no Admin:
+```
 - Acesse http://127.0.0.1:8000/admin/ com seu superusuário.
 - Vá em Users, edite seu próprio usuário e, na seção Perfis, preencha seu Nome e Sobrenome (obrigatório para o certificado).
-
+```
 ### Infraestrutura (Admin):
 - Vá em Core > Salas e crie salas (Ex: "Sala 101").
 - Vá em Core > Disponibilidade Salas e crie horários livres para essas salas.
