@@ -28,7 +28,7 @@ Certifique-se de ter o **Python 3** instalado.
 ### 1. Clone o repositório
 No terminal, execute:
 ```
-git clone [https://github.com/kyliews/pilarschool.git](https://github.com/kyliews/pilarschool.git)
+git clone https://github.com/kyliews/pilarschool.git
 cd pilarschool
 ```
 ## 2. Crie e ative o ambiente virtual
@@ -69,8 +69,9 @@ python manage.py runserver
 ```
 ## 8. Acesse a aplicação
 ```
-Aplicação: http://127.0.0.1:8000/
-Painel Admin: http://127.0.0.1:8000/admin/
+http://127.0.0.1:8000/
+para admin:
+http://127.0.0.1:8000/admin/
 ```
 ##  Credenciais de Teste (Geradas pelo Script)
 Se você rodou o comando popular_banco, use estas contas para testar:
